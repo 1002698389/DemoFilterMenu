@@ -1,0 +1,17 @@
+platform :ios, '8.0'
+use_frameworks!
+target "FJFilterMenuDemo" do
+
+### Customized Components ###
+pod 'FJController', :git => 'https://github.com/jeffnjut/FJController.git'
+pod 'FJTableView', :git => 'https://github.com/jeffnjut/FJTableView.git'
+pod 'FJTool', :git => 'https://github.com/jeffnjut/FJTool.git'
+pod 'ReactiveCocoa', '~> 2.3.1'
+pod 'BlocksKit'
+pod 'Typeset'
+pod 'JHChainableAnimations'
+pod 'Masonry'
+pod 'UIView+Shake'
+pod 'UIView+AnimationExtensions'
+
+end
