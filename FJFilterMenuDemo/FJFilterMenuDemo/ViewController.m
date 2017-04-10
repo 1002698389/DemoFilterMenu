@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "SearchHistoryViewController.h"
 
 @interface ViewController ()
 
@@ -24,11 +23,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-
-- (IBAction)tapSearch:(id)sender {
-    UINavigationController *nav = [[UINavigationController alloc] init];
 }
 
 @end

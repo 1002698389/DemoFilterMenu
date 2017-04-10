@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="SearchHistoryCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R58-se-B5o">
+                        <rect key="frame" x="10" y="10" width="146" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="146" id="mCo-e4-ALF"/>
+                            <constraint firstAttribute="height" constant="20" id="otC-h3-hln"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_deletion" translatesAutoresizingMaskIntoConstraints="NO" id="yYi-eO-cCR">
+                        <rect key="frame" x="290" y="10" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="3uc-Rn-Fsa"/>
+                            <constraint firstAttribute="width" constant="20" id="VDa-8l-qdZ"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="暂无最近搜索记录" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fek-C6-5Mw">
+                        <rect key="frame" x="87" y="50" width="146" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="146" id="Mit-cL-li7"/>
+                            <constraint firstAttribute="height" constant="20" id="ejd-98-sza"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="Fek-C6-5Mw" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="6Sa-Fw-mz5"/>
+                    <constraint firstItem="R58-se-B5o" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="AJd-4z-F8M"/>
+                    <constraint firstItem="R58-se-B5o" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="Bwi-pW-F4E"/>
+                    <constraint firstItem="Fek-C6-5Mw" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="10" id="HZ3-xX-RtM"/>
+                    <constraint firstItem="yYi-eO-cCR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="RLh-Z3-6ER"/>
+                    <constraint firstAttribute="trailing" secondItem="yYi-eO-cCR" secondAttribute="trailing" constant="10" id="Twq-ht-sAN"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="iv_deletion" destination="yYi-eO-cCR" id="ncu-SS-Glr"/>
+                <outlet property="lb_norecentsearch" destination="Fek-C6-5Mw" id="Zen-hz-4QU"/>
+                <outlet property="lb_title" destination="R58-se-B5o" id="0il-V8-y8b"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="icon_deletion" width="24" height="24"/>
+    </resources>
+</document>

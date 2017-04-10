@@ -15,12 +15,19 @@
 		1F4A2D6C1E9779DC0033B5D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F4A2D6A1E9779DC0033B5D8 /* LaunchScreen.storyboard */; };
 		1F4A2D791E977B1D0033B5D8 /* SearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D781E977B1D0033B5D8 /* SearchBar.m */; };
 		1F4A2D7B1E977B240033B5D8 /* SearchBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F4A2D7A1E977B240033B5D8 /* SearchBar.xib */; };
-		1F4A2D7E1E977E430033B5D8 /* SearchHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D7D1E977E430033B5D8 /* SearchHistoryViewController.m */; };
 		1F4A2D811E977E5D0033B5D8 /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D801E977E5D0033B5D8 /* SearchResultViewController.m */; };
 		1F4A2D841E977FA00033B5D8 /* SearchRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D831E977FA00033B5D8 /* SearchRootViewController.m */; };
 		1F4A2D871E979A660033B5D8 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D861E979A660033B5D8 /* HomeViewController.m */; };
 		1F4A2D8A1E979DB00033B5D8 /* SearchHistoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D891E979DB00033B5D8 /* SearchHistoryView.m */; };
 		1F4A2D8E1E97B8A40033B5D8 /* FJTagCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4A2D8D1E97B8A40033B5D8 /* FJTagCollectionView.m */; };
+		1F58A6F01E9B1EE800ADAD31 /* FJTagConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A6EF1E9B1EE800ADAD31 /* FJTagConfig.m */; };
+		1F58A6F31E9B3E2800ADAD31 /* FJTextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A6F21E9B3E2800ADAD31 /* FJTextButton.m */; };
+		1F58A6FC1E9B616400ADAD31 /* SearchHistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A6FA1E9B616400ADAD31 /* SearchHistoryCell.m */; };
+		1F58A6FD1E9B616400ADAD31 /* SearchHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F58A6FB1E9B616400ADAD31 /* SearchHistoryCell.xib */; };
+		1F58A7001E9B884B00ADAD31 /* SearchBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A6FF1E9B884B00ADAD31 /* SearchBaseViewController.m */; };
+		1F58A7071E9B972100ADAD31 /* SearchAutomatedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A7051E9B972100ADAD31 /* SearchAutomatedCell.m */; };
+		1F58A7081E9B972100ADAD31 /* SearchAutomatedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F58A7061E9B972100ADAD31 /* SearchAutomatedCell.xib */; };
+		1F58A70B1E9B987D00ADAD31 /* SearchAutomatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A70A1E9B987D00ADAD31 /* SearchAutomatedView.m */; };
 		7685952C1BFCA9F3E59FAA9A /* Pods_FJFilterMenuDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4114E00D283ED943945227CD /* Pods_FJFilterMenuDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,8 +45,6 @@
 		1F4A2D771E977B1D0033B5D8 /* SearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBar.h; sourceTree = "<group>"; };
 		1F4A2D781E977B1D0033B5D8 /* SearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBar.m; sourceTree = "<group>"; };
 		1F4A2D7A1E977B240033B5D8 /* SearchBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBar.xib; sourceTree = "<group>"; };
-		1F4A2D7C1E977E430033B5D8 /* SearchHistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryViewController.h; sourceTree = "<group>"; };
-		1F4A2D7D1E977E430033B5D8 /* SearchHistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryViewController.m; sourceTree = "<group>"; };
 		1F4A2D7F1E977E5D0033B5D8 /* SearchResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
 		1F4A2D801E977E5D0033B5D8 /* SearchResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
 		1F4A2D821E977FA00033B5D8 /* SearchRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRootViewController.h; sourceTree = "<group>"; };
@@ -50,6 +55,20 @@
 		1F4A2D891E979DB00033B5D8 /* SearchHistoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryView.m; sourceTree = "<group>"; };
 		1F4A2D8C1E97B8A40033B5D8 /* FJTagCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJTagCollectionView.h; sourceTree = "<group>"; };
 		1F4A2D8D1E97B8A40033B5D8 /* FJTagCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJTagCollectionView.m; sourceTree = "<group>"; };
+		1F58A6EE1E9B1EE800ADAD31 /* FJTagConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJTagConfig.h; sourceTree = "<group>"; };
+		1F58A6EF1E9B1EE800ADAD31 /* FJTagConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJTagConfig.m; sourceTree = "<group>"; };
+		1F58A6F11E9B3E2800ADAD31 /* FJTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FJTextButton.h; sourceTree = "<group>"; };
+		1F58A6F21E9B3E2800ADAD31 /* FJTextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FJTextButton.m; sourceTree = "<group>"; };
+		1F58A6F91E9B616400ADAD31 /* SearchHistoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryCell.h; sourceTree = "<group>"; };
+		1F58A6FA1E9B616400ADAD31 /* SearchHistoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryCell.m; sourceTree = "<group>"; };
+		1F58A6FB1E9B616400ADAD31 /* SearchHistoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchHistoryCell.xib; sourceTree = "<group>"; };
+		1F58A6FE1E9B884B00ADAD31 /* SearchBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBaseViewController.h; sourceTree = "<group>"; };
+		1F58A6FF1E9B884B00ADAD31 /* SearchBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBaseViewController.m; sourceTree = "<group>"; };
+		1F58A7041E9B972100ADAD31 /* SearchAutomatedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAutomatedCell.h; sourceTree = "<group>"; };
+		1F58A7051E9B972100ADAD31 /* SearchAutomatedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAutomatedCell.m; sourceTree = "<group>"; };
+		1F58A7061E9B972100ADAD31 /* SearchAutomatedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAutomatedCell.xib; sourceTree = "<group>"; };
+		1F58A7091E9B987D00ADAD31 /* SearchAutomatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAutomatedView.h; sourceTree = "<group>"; };
+		1F58A70A1E9B987D00ADAD31 /* SearchAutomatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAutomatedView.m; sourceTree = "<group>"; };
 		3ECF6E6F3CE286C1918E99FD /* Pods-FJFilterMenuDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FJFilterMenuDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FJFilterMenuDemo/Pods-FJFilterMenuDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		4114E00D283ED943945227CD /* Pods_FJFilterMenuDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FJFilterMenuDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		59B3644BD29DF81250B09BEA /* Pods-FJFilterMenuDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FJFilterMenuDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-FJFilterMenuDemo/Pods-FJFilterMenuDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -88,6 +107,7 @@
 		1F4A2D5B1E9779DC0033B5D8 /* FJFilterMenuDemo */ = {
 			isa = PBXGroup;
 			children = (
+				1F58A6F41E9B5B6A00ADAD31 /* Resources */,
 				1F4A2D8B1E97B87B0033B5D8 /* FJTagCollectionView */,
 				1F4A2D731E977A1A0033B5D8 /* Classes */,
 				1F4A2D5F1E9779DC0033B5D8 /* AppDelegate.h */,
@@ -114,12 +134,12 @@
 		1F4A2D731E977A1A0033B5D8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F58A6FE1E9B884B00ADAD31 /* SearchBaseViewController.h */,
+				1F58A6FF1E9B884B00ADAD31 /* SearchBaseViewController.m */,
 				1F4A2D851E979A660033B5D8 /* HomeViewController.h */,
 				1F4A2D861E979A660033B5D8 /* HomeViewController.m */,
 				1F4A2D821E977FA00033B5D8 /* SearchRootViewController.h */,
 				1F4A2D831E977FA00033B5D8 /* SearchRootViewController.m */,
-				1F4A2D7C1E977E430033B5D8 /* SearchHistoryViewController.h */,
-				1F4A2D7D1E977E430033B5D8 /* SearchHistoryViewController.m */,
 				1F4A2D7F1E977E5D0033B5D8 /* SearchResultViewController.h */,
 				1F4A2D801E977E5D0033B5D8 /* SearchResultViewController.m */,
 				1F4A2D771E977B1D0033B5D8 /* SearchBar.h */,
@@ -127,6 +147,14 @@
 				1F4A2D7A1E977B240033B5D8 /* SearchBar.xib */,
 				1F4A2D881E979DB00033B5D8 /* SearchHistoryView.h */,
 				1F4A2D891E979DB00033B5D8 /* SearchHistoryView.m */,
+				1F58A6F91E9B616400ADAD31 /* SearchHistoryCell.h */,
+				1F58A6FA1E9B616400ADAD31 /* SearchHistoryCell.m */,
+				1F58A6FB1E9B616400ADAD31 /* SearchHistoryCell.xib */,
+				1F58A7091E9B987D00ADAD31 /* SearchAutomatedView.h */,
+				1F58A70A1E9B987D00ADAD31 /* SearchAutomatedView.m */,
+				1F58A7041E9B972100ADAD31 /* SearchAutomatedCell.h */,
+				1F58A7051E9B972100ADAD31 /* SearchAutomatedCell.m */,
+				1F58A7061E9B972100ADAD31 /* SearchAutomatedCell.xib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -136,8 +164,19 @@
 			children = (
 				1F4A2D8C1E97B8A40033B5D8 /* FJTagCollectionView.h */,
 				1F4A2D8D1E97B8A40033B5D8 /* FJTagCollectionView.m */,
+				1F58A6F11E9B3E2800ADAD31 /* FJTextButton.h */,
+				1F58A6F21E9B3E2800ADAD31 /* FJTextButton.m */,
+				1F58A6EE1E9B1EE800ADAD31 /* FJTagConfig.h */,
+				1F58A6EF1E9B1EE800ADAD31 /* FJTagConfig.m */,
 			);
 			path = FJTagCollectionView;
+			sourceTree = "<group>";
+		};
+		1F58A6F41E9B5B6A00ADAD31 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		4DE109C1854901DA6AEFD1C4 /* Frameworks */ = {
@@ -218,10 +257,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F58A6FD1E9B616400ADAD31 /* SearchHistoryCell.xib in Resources */,
 				1F4A2D6C1E9779DC0033B5D8 /* LaunchScreen.storyboard in Resources */,
 				1F4A2D7B1E977B240033B5D8 /* SearchBar.xib in Resources */,
 				1F4A2D691E9779DC0033B5D8 /* Assets.xcassets in Resources */,
 				1F4A2D671E9779DC0033B5D8 /* Main.storyboard in Resources */,
+				1F58A7081E9B972100ADAD31 /* SearchAutomatedCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,14 +322,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F4A2D641E9779DC0033B5D8 /* ViewController.m in Sources */,
+				1F58A7001E9B884B00ADAD31 /* SearchBaseViewController.m in Sources */,
 				1F4A2D611E9779DC0033B5D8 /* AppDelegate.m in Sources */,
 				1F4A2D841E977FA00033B5D8 /* SearchRootViewController.m in Sources */,
 				1F4A2D5E1E9779DC0033B5D8 /* main.m in Sources */,
+				1F58A7071E9B972100ADAD31 /* SearchAutomatedCell.m in Sources */,
+				1F58A6F01E9B1EE800ADAD31 /* FJTagConfig.m in Sources */,
 				1F4A2D811E977E5D0033B5D8 /* SearchResultViewController.m in Sources */,
 				1F4A2D791E977B1D0033B5D8 /* SearchBar.m in Sources */,
 				1F4A2D8A1E979DB00033B5D8 /* SearchHistoryView.m in Sources */,
-				1F4A2D7E1E977E430033B5D8 /* SearchHistoryViewController.m in Sources */,
+				1F58A70B1E9B987D00ADAD31 /* SearchAutomatedView.m in Sources */,
+				1F58A6FC1E9B616400ADAD31 /* SearchHistoryCell.m in Sources */,
 				1F4A2D871E979A660033B5D8 /* HomeViewController.m in Sources */,
+				1F58A6F31E9B3E2800ADAD31 /* FJTextButton.m in Sources */,
 				1F4A2D8E1E97B8A40033B5D8 /* FJTagCollectionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

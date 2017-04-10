@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="SearchAutomatedCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wCf-lW-iV2">
+                        <rect key="frame" x="20" y="11" width="280" height="21"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iiQ-nU-ApC" customClass="HorizontalDotLine">
+                        <rect key="frame" x="20" y="43" width="280" height="1"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="c0G-4m-Cp9"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="iiQ-nU-ApC" secondAttribute="bottom" id="4du-Dh-5Zm"/>
+                    <constraint firstAttribute="trailing" secondItem="iiQ-nU-ApC" secondAttribute="trailing" constant="20" id="STw-ec-EKg"/>
+                    <constraint firstItem="iiQ-nU-ApC" firstAttribute="top" secondItem="wCf-lW-iV2" secondAttribute="bottom" constant="11" id="fRk-jh-VuU"/>
+                    <constraint firstItem="wCf-lW-iV2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="leX-1I-Xme"/>
+                    <constraint firstItem="wCf-lW-iV2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="qIL-ap-wab"/>
+                    <constraint firstItem="iiQ-nU-ApC" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="uLg-30-wbW"/>
+                    <constraint firstAttribute="trailing" secondItem="wCf-lW-iV2" secondAttribute="trailing" constant="20" id="wKt-PK-lbC"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="lb_title" destination="wCf-lW-iV2" id="LGP-1h-FpT"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

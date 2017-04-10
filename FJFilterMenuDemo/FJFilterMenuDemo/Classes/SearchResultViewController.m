@@ -7,6 +7,7 @@
 //
 
 #import "SearchResultViewController.h"
+#import <FJTool/FJTool.h>
 
 @interface SearchResultViewController ()
 
@@ -16,7 +17,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.view.backgroundColor = COLOR_TEXT_BLUE;
+    
+    UILabel *lb = [[UILabel alloc] init];
+    [self.view addSubview:lb];
+    lb.text = self.key;
+    [lb sizeToFit];
+    lb.center = self.view.center;
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {

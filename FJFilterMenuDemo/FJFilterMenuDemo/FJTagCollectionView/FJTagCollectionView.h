@@ -7,7 +7,50 @@
 //
 
 #import <UIKit/UIKit.h>
+@class FJTagConfig;
 
 @interface FJTagCollectionView : UIView
+
+// 添加Tags
+- (void)addTags:(NSArray<NSString *> *)tags;
+
+// 添加Tags(Config)
+- (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config;
+
+// 插入Tags
+- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index;
+
+// 插入Tags(Config)
+- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index config:(FJTagConfig*)config;
+
+// 删除Tags(名称)
+- (void)removeTag:(NSString*)tag;
+
+// 删除Tags(Index)
+- (void)removeTagAt:(NSUInteger)index;
+
+// 删除所有Tags
+- (void)removeAllTags;
+
+// 设置CollectionView的Origin位置
+- (void)setTagViewOrigin:(CGPoint)origin;
+
+// 设置CollectionView的宽
+- (void)setTagViewWidth:(CGFloat)width;
+
+// 获取TagCollectionView的大小
+- (CGSize)getTagViewSize;
+
+// 获取所有Tags
+- (NSArray<NSString *> *)allTags;
+
+// 刷新UI
+- (void)refresh;
+
+// 设置点击Tag事件的Block
+@property (nonatomic, copy) void(^tagTappedBlock)(NSString *tag);
+
+// 计算控件高度
++ (CGSize)calculateSize:(CGFloat)width tags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config;
 
 @end
