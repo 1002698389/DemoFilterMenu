@@ -10,6 +10,11 @@
 
 @interface SearchFilterView()
 
+@property (nonatomic, strong) FJTableView *leftView;
+@property (nonatomic, strong) FJTableView *rightView;
+@property (nonatomic, strong) SolidLine *headerLine;
+@property (nonatomic, strong) UIView *bottomView;
+
 @end
 
 @implementation SearchFilterView
@@ -39,6 +44,7 @@
         make.left.right.equalTo(weakSelf);
         make.height.equalTo(@1.0);
     }];
+    self.headerLine = headerLine;
     
     // 关闭按钮
     UIImageView *iv_close = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_close_black"]];
@@ -82,6 +88,7 @@
         make.left.bottom.right.equalTo(weakSelf);
         make.height.equalTo(@66);
     }];
+    self.bottomView = bottomView;
     
     SolidLine *solidLine = [SolidLine line:CGRectZero orient:LineOrient_RectUp color:COLOR_GRAY_999999];
     __weak typeof(bottomView) weakBottomView = bottomView;
@@ -103,6 +110,40 @@
         make.bottom.right.equalTo(weakBottomView).offset(-10.0);
     }];
     
+    // TableView
+    [self leftView];
+    [self rightView];
+    
+}
+
+- (FJTableView *)leftView {
+    if (_leftView == nil) {
+        _leftView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor yellowColor]];
+        [self addSubview:_leftView];
+        __weak typeof(self) weakSelf = self;
+        [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(weakSelf);
+            make.top.equalTo(weakSelf.headerLine.mas_bottom);
+            make.bottom.equalTo(weakSelf.bottomView.mas_top);
+            make.width.equalTo(@100);
+        }];
+    }
+    return _leftView;
+}
+
+- (FJTableView *)rightView {
+    if (_rightView == nil) {
+        _rightView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor greenColor]];
+        [self addSubview:_rightView];
+        __weak typeof(self) weakSelf = self;
+        [_rightView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(weakSelf.headerLine.mas_bottom);
+            make.left.equalTo(weakSelf.leftView.mas_right);
+            make.bottom.equalTo(weakSelf.bottomView.mas_top);
+            make.right.equalTo(weakSelf);
+        }];
+    }
+    return _rightView;
 }
 
 /*

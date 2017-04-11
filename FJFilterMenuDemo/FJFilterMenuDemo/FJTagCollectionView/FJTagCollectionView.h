@@ -11,6 +11,10 @@
 
 @interface FJTagCollectionView : UIView
 
+// 设置点击Tag事件的Block
+@property (nonatomic, copy) void(^tagTappedBlock)(NSString *tag);
+
+
 // 添加Tags
 - (void)addTags:(NSArray<NSString *> *)tags;
 
@@ -46,9 +50,6 @@
 
 // 刷新UI
 - (void)refresh;
-
-// 设置点击Tag事件的Block
-@property (nonatomic, copy) void(^tagTappedBlock)(NSString *tag);
 
 // 计算控件高度
 + (CGSize)calculateSize:(CGFloat)width tags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config;

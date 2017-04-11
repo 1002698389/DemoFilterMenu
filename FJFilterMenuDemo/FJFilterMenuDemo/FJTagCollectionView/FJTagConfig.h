@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FJTagConfig : NSObject
+@interface FJTagButtonConfig : NSObject
 
 // Tag的字体颜色
 @property (nonatomic, strong) UIColor *tagTextColor;
@@ -27,6 +27,26 @@
 
 // Tag的Corner Radius
 @property (nonatomic, assign) CGFloat tagCornerRadius;
+
+// Tag是否多选
+@property (nonatomic, assign) BOOL enableMultiTap;
+
+// Tag的Highlighted字体颜色(当enableMultiTap为YES有效)
+@property (nonatomic, strong) UIColor *tagHighlightedTextColor;
+
+// Tag的Highlighted背景颜色(当enableMultiTap为YES有效)
+@property (nonatomic, strong) UIColor *tagHighlightedBackgroundColor;
+
+// Tag的Highlighted边框颜色(当enableMultiTap为YES有效)
+@property (nonatomic, strong) UIColor *tagHighlightedBorderColor;
+
+// Tag的Highlighted字体
+@property (nonatomic, strong) UIFont *tagHighlightedTextFont;
+
+@end
+
+
+@interface FJTagConfig : FJTagButtonConfig
 
 // Padding Top
 @property (nonatomic, assign) CGFloat paddingTop;
@@ -54,5 +74,6 @@
 
 // Item Padding Left&Right
 @property (nonatomic, assign) CGFloat itemPadding;
+
 
 @end

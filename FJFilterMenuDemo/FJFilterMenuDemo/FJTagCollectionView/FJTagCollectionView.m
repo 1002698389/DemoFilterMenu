@@ -152,13 +152,7 @@
 
 - (FJTextButton*)tagButton:(NSString*)tag {
     FJTextButton *button = [[FJTextButton alloc] initWithFrame:CGRectMake(0, 0, _innerTagConfig.itemMinWidth, _innerTagConfig.itemMinHeight)];
-    [button setTitle:tag forState:UIControlStateNormal];
-    [button setBackgroundColor:_innerTagConfig.tagBackgroundColor];
-    button.titleLabel.font = _innerTagConfig.tagTextFont;
-    
-    if (_innerTagConfig.tagBorderWidth > 0) {
-        [button cornerRadius:_innerTagConfig.tagCornerRadius borderWidth:_innerTagConfig.tagBorderWidth boderColor:_innerTagConfig.tagBorderColor];
-    }
+    [button setTitle:tag config:_innerTagConfig];
     
     CGFloat w = [tag singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
     if (w + 2 * _innerTagConfig.itemPadding >= self.innerWidth) {
@@ -171,7 +165,12 @@
     
     MF_WEAK_SELF(self);
     [button bk_addEventHandler:^(UIButton *sender) {
-        weakSelf.tagTappedBlock == nil ? : weakSelf.tagTappedBlock(sender.titleLabel.text);
+        if (_innerTagConfig.enableMultiTap) {
+            
+        }else{
+            weakSelf.tagTappedBlock == nil ? : weakSelf.tagTappedBlock(sender.titleLabel.text);
+        }
+        
     } forControlEvents:UIControlEventTouchUpInside];
     return button;
 }

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FJTagConfig.h"
 
 @interface FJTextButton : UIButton
+
+- (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config;
 
 @end

@@ -4,8 +4,12 @@
 //
 
 #import "MessageViewController.h"
+#import "FJTagCollectionView.h"
+#import "FJTagConfig.h"
 
 @interface MessageViewController ()
+
+@property (nonatomic, strong) FJTagCollectionView *tagView;
 
 @end
 
@@ -20,6 +24,26 @@
     lb.text = @"Message";
     [lb sizeToFit];
     lb.center = self.view.center;
+
+    FJTagConfig *config = [FJTagConfig new];
+    config.enableMultiTap = YES;
+    [self.tagView addTags:@[@"AAAAAAA",@"BBBBB",@"CCCCCCCC",@"DDDDDDDDD",@"EEEEEE",@"FFFFFFFFFFFF"] config:config];
+    [self.tagView refresh];
+}
+
+- (FJTagCollectionView *)tagView {
+    if (_tagView == nil) {
+        
+        _tagView = [[FJTagCollectionView alloc] init];
+        [_tagView setTagViewOrigin:CGPointMake(0, 30)];
+        [self.view addSubview:_tagView];
+        [_tagView setTagViewWidth:UI_SCREEN_WIDTH];
+        MF_WEAK_SELF(self);
+        _tagView.tagTappedBlock = ^(NSString *tag) {
+            
+        };
+    }
+    return _tagView;
 }
 
 - (void)didReceiveMemoryWarning {
