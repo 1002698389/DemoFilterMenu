@@ -1,0 +1,28 @@
+//
+//  demo.pch
+//  FJFilterMenuDemo
+//
+//  Created by Jeff on 2017/4/11.
+//  Copyright © 2017年 Jeff. All rights reserved.
+//
+
+#ifndef demo_pch
+#define demo_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <UIKit/UIKit.h>
+
+#import <Masonry/Masonry.h>
+#import <BlocksKit/BlocksKit+UIKit.h>
+#import <JSONModel/JSONModel.h>
+#import <ReactiveCocoa/ReactiveCocoa.h>
+
+#import <FJTool/FJTool.h>
+#import <FJController/FJControllerHeader.h>
+#import <FJTableView/FJTableViewHeader.h>
+#import <FJCollectionView/FJCollectionViewHeader.h>
+#import <FJRefresh/FJRefresh.h>
+
+#endif /* demo_pch */

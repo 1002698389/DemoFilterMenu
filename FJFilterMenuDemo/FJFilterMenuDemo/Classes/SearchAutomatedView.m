@@ -2,14 +2,8 @@
 //  SearchAutomatedView.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/10.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "SearchAutomatedView.h"
-#import <Masonry/Masonry.h>
-#import <FJTableView/FJTableViewHeader.h>
-#import <FJTool/FJTool.h>
 #import "SearchAutomatedCell.h"
 
 @interface SearchAutomatedView()

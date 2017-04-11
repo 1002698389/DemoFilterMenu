@@ -2,34 +2,28 @@
 //  SearchBaseViewController.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/10.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "SearchBaseViewController.h"
-#import <Masonry/Masonry.h>
-#import <BlocksKit/BlocksKit+UIKit.h>
 #import <TTGTagCollectionView/TTGTextTagCollectionView.h>
-#import <ReactiveCocoa/ReactiveCocoa.h>
-
-#import <FJTool/FJTool.h>
-#import <FJController/FJControllerHeader.h>
 
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
-
+#import "SearchNavBarButton.h"
 #import "SearchHistoryView.h"
 #import "SearchAutomatedView.h"
 #import "SearchResultViewController.h"
+#import "MessageViewController.h"
 
 #define LeftViewMargin  (10.0 + 5.0)
-#define TextFieldHeight (UI_NAVIGATION_BAR_HEIGHT - 20.0)
+#define TextFieldHeight (24.0)
 
 @interface SearchBaseViewController ()
 
 @property (nonatomic, strong) UIViewController *rootVC;
+@property (nonatomic, strong) SearchNavBarButton *searchNavBarButton;
 @property (nonatomic, strong) SearchHistoryView *searchHistoryView;
 @property (nonatomic, strong) SearchAutomatedView *searchAutomatedView;
+@property (nonatomic, assign) BOOL searchHistory;
 
 
 @end
@@ -64,7 +58,9 @@
     __weak typeof(self) weakSelf = self;
     // Setup UI
     UITextField *tf = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH , TextFieldHeight)];
-    [tf cornerRadius:tf.height / 2.0 borderWidth:0.5 boderColor:COLOR_GRAY_CCCCCC];
+    [tf cornerRadius:4.0];
+    tf.backgroundColor = COLOR_GRAY_F0F0F0;
+    tf.tintColor = COLOR_GRAY_999999;
     tf.placeholder = @"搜索商品";
     tf.font = [UIFont systemFontOfSize:12.0];
     tf.textColor = COLOR_GRAY_333333;
@@ -90,13 +86,18 @@
     UIView *leftEmpty = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40.0, 24.0)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftEmpty];
     
-    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40.0, 24.0)];
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
-    [cancelBtn setTitleColor:COLOR_GRAY_CCCCCC forState:UIControlStateNormal];
-    cancelBtn.titleLabel.font = [UIFont systemFontOfSize:12.0];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelBtn];
     
-    [cancelBtn bk_addEventHandler:^(id sender) {
+    UIBarButtonItem *barSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    barSpace.width = -10;
+    
+    self.navigationItem.rightBarButtonItems = @[barSpace, [[UIBarButtonItem alloc] initWithCustomView:self.searchNavBarButton]];
+    [self.searchNavBarButton setUserInteractionEnabled:YES];
+    __weak typeof(self.searchNavBarButton) weakSearchNavBarButton = self.searchNavBarButton;
+    [self.searchNavBarButton.cancelBtn bk_addEventHandler:^(id sender) {
+        
+        [weakSearchNavBarButton switchTo:0];
+        weakSelf.searchHistory = NO;
+        
         [weakTf resignFirstResponder];
         [weakSelf restoreSearchBarAnimation];
         weakSelf.searchHistoryView.hidden = YES;
@@ -104,10 +105,24 @@
         
     } forControlEvents:UIControlEventTouchUpInside];
     
+    [self.searchNavBarButton.messageBtn bk_addEventHandler:^(id sender) {
+        
+        MessageViewController *messageVC = [[MessageViewController alloc] init];
+        [weakSelf.navigationController pushViewController:messageVC animated:YES];
+        
+    } forControlEvents:UIControlEventTouchUpInside];
+    
     tf.bk_didBeginEditingBlock = ^(UITextField *textField) {
+        if (weakSelf.searchHistory) {
+            return;
+        }
+        
         [weakSelf expandSearchBarAnimation];
         weakSelf.searchHistoryView.hidden = NO;
         [weakSelf.searchHistoryView refresh:YES];
+
+        [weakSearchNavBarButton switchTo:1];
+        weakSelf.searchHistory = YES;
     };
     
     tf.bk_shouldReturnBlock = ^BOOL(UITextField *textfield) {
@@ -126,6 +141,15 @@
             _searchHistoryView.hidden = NO;
         }
     }];
+}
+
+// SearchNavBarButton
+- (SearchNavBarButton *)searchNavBarButton {
+    if (_searchNavBarButton == nil) {
+        _searchNavBarButton = [[SearchNavBarButton alloc] initWithFrame:CGRectMake(0, 0, 40.0, 40.0)];
+        [_searchNavBarButton setupUI];
+    }
+    return _searchNavBarButton;
 }
 
 // SearchHistoryView
@@ -173,6 +197,9 @@
         
         // Search View Tag Tapped
         _searchAutomatedView.tagTapped = ^(NSString *tag) {
+            UITextField *tf = (UITextField *)weakSelf.navigationItem.titleView;
+            [tf resignFirstResponder];
+            tf.text = nil;
             [weakSelf searchTag:tag save:NO];
         };
         
@@ -223,25 +250,34 @@
 - (void)searchTag:(NSString*)tag save:(BOOL)save {
     
     // 保存Recent Search
-    if ([tag trimString:TrimType_WhiteSpaneAndNewline].length > 0 && save) {
+    NSString *trimmedTag = [tag trimString:TrimType_WhiteSpaneAndNewline];
+    if (trimmedTag.length > 0 && save) {
         NSMutableArray *recentSearchTags = [FJStorage value_nsobject:@"RecentSearch"];
         if (recentSearchTags == nil || [recentSearchTags count] == 0) {
-            recentSearchTags = [[NSMutableArray alloc] init];
-        }else{
             recentSearchTags = [NSMutableArray arrayWithArray:recentSearchTags];
+            [recentSearchTags addObject:trimmedTag];
+            [FJStorage save_nsobject:recentSearchTags key:@"RecentSearch"];
+        }else{
+            
+            NSMutableSet *recentPool = [NSMutableSet setWithArray:recentSearchTags];
+            [recentPool addObject:trimmedTag];
+            [FJStorage save_nsobject:[recentPool allObjects] key:@"RecentSearch"];
         }
-        [recentSearchTags addObject:tag];
-        [FJStorage save_nsobject:recentSearchTags key:@"RecentSearch"];
     }
     
+    [_searchHistoryView removeFromSuperview];
+    [_searchAutomatedView removeFromSuperview];
+    _searchHistoryView = nil;
+    _searchAutomatedView = nil;
+    [self restoreSearchBarAnimation];
+    
     SearchResultViewController *searchResultVC = [[SearchResultViewController alloc] init];
-    searchResultVC.key = tag;
+    [searchResultVC updateSearchCriteria:tag query:nil];
     [self.navigationController pushViewController:searchResultVC animated:YES];
     
-    MF_WEAK_SELF(self);
-    weakSelf.searchHistoryView.hidden = YES;
-    weakSelf.searchAutomatedView.hidden = YES;
-    [weakSelf restoreSearchBarAnimation];
+    [self.searchNavBarButton switchTo:0];
+    self.searchHistory = NO;
+    
 }
 
 - (void)didReceiveMemoryWarning {

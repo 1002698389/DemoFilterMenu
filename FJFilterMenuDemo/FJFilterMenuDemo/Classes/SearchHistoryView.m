@@ -2,15 +2,8 @@
 //  SearchHistoryView.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/7.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "SearchHistoryView.h"
-#import <Masonry/Masonry.h>
-#import <FJTableView/FJTableViewHeader.h>
-#import <FJTool/FJTool.h>
-#import <FJController/FJControllerMgr.h>
 #import "SearchHistoryCell.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
@@ -116,7 +109,7 @@
         [self.indicatorView startAnimating];
         
         // Recent Search History
-        NSArray *tags = [FJStorage value_nsobject:@"RecentSearch"];
+        NSArray *tags = [[FJStorage value_nsobject:@"RecentSearch"] allObjects];
         // Add Cell
         self.tableView.hidden = NO;
         SearchHistoryCellDataSource *sds = [[SearchHistoryCellDataSource alloc] init];
@@ -155,7 +148,7 @@
         [self.tableView refresh];
         
         // Recent Search History
-        NSArray *tags = [FJStorage value_nsobject:@"RecentSearch"];
+        NSArray *tags = [[FJStorage value_nsobject:@"RecentSearch"] allObjects];
         // Add Cell
         SearchHistoryCellDataSource *sds = [[SearchHistoryCellDataSource alloc] init];
         CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:tags config:[FJTagConfig new]];

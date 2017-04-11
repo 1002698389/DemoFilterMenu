@@ -5,7 +5,9 @@ target "FJFilterMenuDemo" do
 ### Customized Components ###
 pod 'FJController', :git => 'https://github.com/jeffnjut/FJController.git'
 pod 'FJTableView', :git => 'https://github.com/jeffnjut/FJTableView.git'
+pod 'FJCollectionView', :git => 'https://github.com/jeffnjut/FJCollectionView.git'
 pod 'FJTool', :git => 'https://github.com/jeffnjut/FJTool.git'
+pod 'FJRefresh', :git => 'https://github.com/jeffnjut/FJRefresh.git'
 pod 'ReactiveCocoa', '~> 2.3.1'
 pod 'BlocksKit'
 pod 'Typeset'
@@ -13,6 +15,7 @@ pod 'JHChainableAnimations'
 pod 'Masonry'
 pod 'UIView+Shake'
 pod 'UIView+AnimationExtensions'
+pod 'JSONModel'
 
 pod 'TTGTagCollectionView'
 

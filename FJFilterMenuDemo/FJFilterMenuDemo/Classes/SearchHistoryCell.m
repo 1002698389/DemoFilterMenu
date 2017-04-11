@@ -2,13 +2,8 @@
 //  SearchHistoryCell.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/10.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "SearchHistoryCell.h"
-#import <BlocksKit/BlocksKit+UIKit.h>
-#import <FJTool/FJTool.h>
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
 

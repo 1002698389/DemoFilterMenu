@@ -2,12 +2,8 @@
 //  HomeViewController.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/7.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "HomeViewController.h"
-#import <Masonry/Masonry.h>
 
 @interface HomeViewController ()
 
@@ -20,7 +16,7 @@
     
     // Setup Home Page UI
     __weak typeof(self) weakSelf = self;
-    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Eddie"]];
+    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home"]];
     [self.view addSubview:backgroundView];
     [backgroundView setContentMode:UIViewContentModeScaleAspectFill];
     [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {

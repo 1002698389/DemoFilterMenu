@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Yej-8T-KPK" customClass="ProductSearchBar">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入想搜索的商品名称或品牌" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="hJ2-P9-4gg">
+                    <rect key="frame" x="28" y="0.0" width="292" height="44"/>
+                    <color key="textColor" red="0.14901960784313725" green="0.14117647058823529" blue="0.12156862745098039" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                </textField>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_search" translatesAutoresizingMaskIntoConstraints="NO" id="H4A-os-GjV">
+                    <rect key="frame" x="10" y="16" width="12" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="12" id="TRB-Gb-U16"/>
+                        <constraint firstAttribute="height" constant="12" id="ySY-ux-BqB"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="0.96078431606292725" green="0.96078431606292725" blue="0.96078431606292725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="hJ2-P9-4gg" secondAttribute="bottom" id="1ZP-wp-Nvq"/>
+                <constraint firstItem="H4A-os-GjV" firstAttribute="centerY" secondItem="Yej-8T-KPK" secondAttribute="centerY" id="Nlp-mq-gtL"/>
+                <constraint firstItem="hJ2-P9-4gg" firstAttribute="centerY" secondItem="Yej-8T-KPK" secondAttribute="centerY" id="UTb-Mf-SgG"/>
+                <constraint firstItem="hJ2-P9-4gg" firstAttribute="top" secondItem="Yej-8T-KPK" secondAttribute="top" id="UnQ-wv-fKi"/>
+                <constraint firstItem="H4A-os-GjV" firstAttribute="leading" secondItem="Yej-8T-KPK" secondAttribute="leading" constant="10" id="eYy-Tf-0Y9"/>
+                <constraint firstItem="hJ2-P9-4gg" firstAttribute="leading" secondItem="H4A-os-GjV" secondAttribute="trailing" constant="6" id="qgh-r3-G22"/>
+                <constraint firstAttribute="trailing" secondItem="hJ2-P9-4gg" secondAttribute="trailing" id="xDk-3s-yUT"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="tf_input" destination="hJ2-P9-4gg" id="Ked-6b-SrD"/>
+            </connections>
+            <point key="canvasLocation" x="547" y="375"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon_search" width="16" height="16"/>
+    </resources>
+</document>

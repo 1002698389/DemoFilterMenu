@@ -2,9 +2,6 @@
 //  SearchRootViewController.m
 //  FJFilterMenuDemo
 //
-//  Created by Jeff on 2017/4/7.
-//  Copyright © 2017年 Jeff. All rights reserved.
-//
 
 #import "SearchRootViewController.h"
 #import "HomeViewController.h"
