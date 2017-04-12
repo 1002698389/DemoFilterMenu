@@ -47,8 +47,8 @@
         self.itemVerticalSpace    = 5.0;
         self.itemMinWidth         = 40.0;
         self.itemMinHeight        = 24.0;
-        self.itemPadding          = 5.0;
-        
+        self.itemPaddingLeft      = 5.0;
+        self.itemPaddingRight     = 5.0;
     }
     return self;
 }

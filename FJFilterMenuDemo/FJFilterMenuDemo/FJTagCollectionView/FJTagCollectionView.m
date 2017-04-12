@@ -148,25 +148,41 @@
         eachX += btn.bounds.size.width + _innerTagConfig.itemHorizontalSpace;
     }
     [self updateTagViewHeight:(eachY + _innerTagConfig.itemMinHeight + _innerTagConfig.paddingBottom)];
+    
+    
+    // Debug
+    if (_innerTagConfig.debug) {
+        self.backgroundColor = self.backgroundColor = COLOR_TEXT_GREEN;
+        
+        UIView * v = [[UIView alloc] initWithFrame:CGRectMake(_innerTagConfig.paddingLeft, _innerTagConfig.paddingTop, self.bounds.size.width - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight, self.bounds.size.height - _innerTagConfig.paddingTop - _innerTagConfig.paddingBottom)];
+        [self insertSubview:v atIndex:0];
+        v.backgroundColor = COLOR_TEXT_BLUE;
+        
+    }
 }
 
 - (FJTextButton*)tagButton:(NSString*)tag {
     FJTextButton *button = [[FJTextButton alloc] initWithFrame:CGRectMake(0, 0, _innerTagConfig.itemMinWidth, _innerTagConfig.itemMinHeight)];
     [button setTitle:tag config:_innerTagConfig];
     
-    CGFloat w = [tag singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
-    if (w + 2 * _innerTagConfig.itemPadding >= self.innerWidth) {
+    CGFloat textWidth = [tag singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
+    CGFloat buttonWidth = textWidth + _innerTagConfig.itemPaddingLeft + _innerTagConfig.itemPaddingRight;
+    if (buttonWidth >= self.innerWidth) {
         button.width = self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight - 1.0;
-    }else if (w + 2 * _innerTagConfig.itemPadding >= _innerTagConfig.itemMinWidth) {
-        button.width = w + 2 * _innerTagConfig.itemPadding;
+    }else if (buttonWidth >= _innerTagConfig.itemMinWidth) {
+        button.width = buttonWidth;
     }else {
         button.width = _innerTagConfig.itemMinWidth;
     }
     
+//    if (_innerTagConfig.selectedImageSize.width > 0) {
+//        button.titleEdgeInsets = UIEdgeInsetsMake(0, _innerTagConfig.selectedImageSize.width, 0, 0);
+//    }
+    
     MF_WEAK_SELF(self);
     [button bk_addEventHandler:^(UIButton *sender) {
         if (_innerTagConfig.enableMultiTap) {
-            
+            weakSelf.tagMultiTappedBlock == nil ? : weakSelf.tagMultiTappedBlock(sender.titleLabel.text, [(FJTextButton*)sender selected]);
         }else{
             weakSelf.tagTappedBlock == nil ? : weakSelf.tagTappedBlock(sender.titleLabel.text);
         }
@@ -185,12 +201,12 @@
     CGFloat eachY = orgY;
     for (NSString *tag in tags) {
         
-        CGFloat buttonWidth = 0;
-        CGFloat w = [tag singleWidthWithLabelFont:config.tagTextFont enableCeil:YES];
-        if (w + 2 * config.itemPadding >= width) {
+        CGFloat textWidth = [tag singleWidthWithLabelFont:config.tagTextFont enableCeil:YES];
+        CGFloat buttonWidth = textWidth + config.itemPaddingLeft + config.itemPaddingRight;
+        if (buttonWidth >= width) {
             buttonWidth = width - config.paddingLeft - config.paddingRight - 1.0;
-        }else if (w + 2 * config.itemPadding >= config.itemMinWidth) {
-            buttonWidth = w + 2 * config.itemPadding;
+        }else if (buttonWidth >= config.itemMinWidth) {
+            
         }else {
             buttonWidth = config.itemMinWidth;
         }

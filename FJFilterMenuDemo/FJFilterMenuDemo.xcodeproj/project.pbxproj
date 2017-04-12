@@ -26,6 +26,7 @@
 		1F58A7071E9B972100ADAD31 /* SearchAutomatedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A7051E9B972100ADAD31 /* SearchAutomatedCell.m */; };
 		1F58A7081E9B972100ADAD31 /* SearchAutomatedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F58A7061E9B972100ADAD31 /* SearchAutomatedCell.xib */; };
 		1F58A70B1E9B987D00ADAD31 /* SearchAutomatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F58A70A1E9B987D00ADAD31 /* SearchAutomatedView.m */; };
+		1F76B1351E9DD2E900C88034 /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F76B1341E9DD2E900C88034 /* ProductViewController.m */; };
 		1F9CCCFD1E9C68E4005570AE /* SearchNavBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9CCCFC1E9C68E4005570AE /* SearchNavBarButton.m */; };
 		1F9CCD001E9C703C005570AE /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9CCCFF1E9C703C005570AE /* MessageViewController.m */; };
 		1F9CCD041E9C854C005570AE /* ProductSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9CCD021E9C854C005570AE /* ProductSearchBar.m */; };
@@ -79,6 +80,8 @@
 		1F58A7061E9B972100ADAD31 /* SearchAutomatedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchAutomatedCell.xib; sourceTree = "<group>"; };
 		1F58A7091E9B987D00ADAD31 /* SearchAutomatedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchAutomatedView.h; sourceTree = "<group>"; };
 		1F58A70A1E9B987D00ADAD31 /* SearchAutomatedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchAutomatedView.m; sourceTree = "<group>"; };
+		1F76B1331E9DD2E900C88034 /* ProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductViewController.h; sourceTree = "<group>"; };
+		1F76B1341E9DD2E900C88034 /* ProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductViewController.m; sourceTree = "<group>"; };
 		1F9CCCFB1E9C68E4005570AE /* SearchNavBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchNavBarButton.h; sourceTree = "<group>"; };
 		1F9CCCFC1E9C68E4005570AE /* SearchNavBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchNavBarButton.m; sourceTree = "<group>"; };
 		1F9CCCFE1E9C703C005570AE /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
@@ -180,6 +183,8 @@
 				1F4A2D861E979A660033B5D8 /* HomeViewController.m */,
 				1F4A2D821E977FA00033B5D8 /* SearchRootViewController.h */,
 				1F4A2D831E977FA00033B5D8 /* SearchRootViewController.m */,
+				1F76B1331E9DD2E900C88034 /* ProductViewController.h */,
+				1F76B1341E9DD2E900C88034 /* ProductViewController.m */,
 				1F4A2D7F1E977E5D0033B5D8 /* SearchResultViewController.h */,
 				1F4A2D801E977E5D0033B5D8 /* SearchResultViewController.m */,
 				1F9CCD211E9CBB82005570AE /* ProductCollectionViewCell.h */,
@@ -396,6 +401,7 @@
 				1F9CCD041E9C854C005570AE /* ProductSearchBar.m in Sources */,
 				1F4A2D841E977FA00033B5D8 /* SearchRootViewController.m in Sources */,
 				1F4A2D5E1E9779DC0033B5D8 /* main.m in Sources */,
+				1F76B1351E9DD2E900C88034 /* ProductViewController.m in Sources */,
 				1F58A7071E9B972100ADAD31 /* SearchAutomatedCell.m in Sources */,
 				1F58A6F01E9B1EE800ADAD31 /* FJTagConfig.m in Sources */,
 				1F9CCD091E9CA8B6005570AE /* SearchTuneBarView.m in Sources */,
@@ -534,6 +540,7 @@
 				DEVELOPMENT_TEAM = 9YHHLB2CQ7;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FJFilterMenuDemo/demo.pch";
 				INFOPLIST_FILE = FJFilterMenuDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Jeff.FJFilterMenuDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -548,6 +555,7 @@
 				DEVELOPMENT_TEAM = 9YHHLB2CQ7;
 				GCC_PREFIX_HEADER = "$(PROJECT_DIR)/FJFilterMenuDemo/demo.pch";
 				INFOPLIST_FILE = FJFilterMenuDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Jeff.FJFilterMenuDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

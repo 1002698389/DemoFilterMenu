@@ -14,6 +14,8 @@
 // 设置点击Tag事件的Block
 @property (nonatomic, copy) void(^tagTappedBlock)(NSString *tag);
 
+// 设置Multi点击Tag事件的Block
+@property (nonatomic, copy) void(^tagMultiTappedBlock)(NSString *tag, BOOL selected);
 
 // 添加Tags
 - (void)addTags:(NSArray<NSString *> *)tags;

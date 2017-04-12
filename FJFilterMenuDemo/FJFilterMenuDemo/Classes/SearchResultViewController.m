@@ -9,6 +9,7 @@
 #import "SearchTuneBarView.h"
 #import "ProductCollectionViewCell.h"
 #import "SearchFilterView.h"
+#import "ProductViewController.h"
 
 @interface SearchResultViewController ()
 
@@ -116,6 +117,26 @@
             make.top.equalTo(weakSelf.searchTuneView.mas_bottom);
             make.left.bottom.right.equalTo(weakSelf.view);
         }];
+        
+        [_collectionView setCollectionCellActionBlock:^(FJ_CollectionCellBlockType type, NSInteger item, NSInteger section, FJCollectionCellDataSource *cellData) {
+            switch (type) {
+                case FJ_CollectionCellBlockType_CellCustomizedTapped:
+                {
+                    NSLog(@"CustomizedTapped");
+                    break;
+                }
+                case FJ_CollectionCellBlockType_CellTapped:
+                {
+                    NSLog(@"Tapped");
+                    ProductCollectionViewCellDataSource *ds = (ProductCollectionViewCellDataSource *)cellData;
+                    ProductViewController *productVC = [[ProductViewController alloc] init];
+                    productVC.imageURL = ds.imageURL;
+                    [weakSelf.navigationController pushViewController:productVC animated:YES];
+                    break;
+                }
+            }
+        }];
+        
     }
     return _collectionView;
 }

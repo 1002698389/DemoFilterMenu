@@ -31,6 +31,12 @@
 // Tag是否多选
 @property (nonatomic, assign) BOOL enableMultiTap;
 
+// Tag勾选图片(NSString, UIImage)
+@property (nonatomic, strong) id selectedImage;
+
+// Tag勾选图片尺寸
+@property (nonatomic, assign) CGSize selectedImageSize;
+
 // Tag的Highlighted字体颜色(当enableMultiTap为YES有效)
 @property (nonatomic, strong) UIColor *tagHighlightedTextColor;
 
@@ -72,8 +78,14 @@
 // Item Minmun Height
 @property (nonatomic, assign) CGFloat itemMinHeight;
 
-// Item Padding Left&Right
-@property (nonatomic, assign) CGFloat itemPadding;
+// Item Padding Left
+@property (nonatomic, assign) CGFloat itemPaddingLeft;
+
+// Item Padding Right
+@property (nonatomic, assign) CGFloat itemPaddingRight;
+
+// Debug(色块显示边距)
+@property (nonatomic, assign) BOOL debug;
 
 
 @end
