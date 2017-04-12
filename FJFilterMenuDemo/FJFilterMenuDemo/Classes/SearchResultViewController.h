@@ -8,6 +8,6 @@
 
 @interface SearchResultViewController : UIViewController
 
-- (void)updateSearchCriteria:(NSString*)key query:(QueryModel*)query;
+- (BOOL)updateSearchCriteria:(NSString*)key query:(QueryModel*)query;
 
 @end

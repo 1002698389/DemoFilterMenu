@@ -23,6 +23,9 @@
 // 添加Tags(Config)
 - (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config;
 
+// 添加Tags(Config, 已经选择的SelectedTags)
+- (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config selectedTags:(NSArray<NSString *> *)selectedTags;
+
 // 插入Tags
 - (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index;
 

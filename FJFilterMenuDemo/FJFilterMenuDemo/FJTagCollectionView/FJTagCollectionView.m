@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSMutableArray *innerTags;
 @property (nonatomic, strong) FJTagConfig *innerTagConfig;
 @property (nonatomic, assign) CGFloat innerWidth;
+@property (nonatomic, strong) NSMutableArray *innerSelectedTags;
 
 @end
 
@@ -30,6 +31,13 @@
         _innerTags = [[NSMutableArray alloc] init];
     }
     return _innerTags;
+}
+
+- (NSMutableArray *)innerSelectedTags {
+    if (_innerSelectedTags == nil) {
+        _innerSelectedTags = [[NSMutableArray alloc] init];
+    }
+    return _innerSelectedTags;
 }
 
 - (instancetype)init
@@ -53,6 +61,21 @@
     }
     
     [self.innerTags addObjectsFromArray:tags];
+    if (config != nil) {
+        self.innerTagConfig = config;
+    }
+}
+
+// 添加Tags(Config, SelectedTags)
+- (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config selectedTags:(NSArray<NSString *> *)selectedTags {
+    if (tags == nil || [tags count] == 0) {
+        return;
+    }
+    
+    [self.innerTags addObjectsFromArray:tags];
+    if (selectedTags != nil && [selectedTags count] > 0) {
+        [self.innerSelectedTags addObjectsFromArray:selectedTags];
+    }
     if (config != nil) {
         self.innerTagConfig = config;
     }
@@ -162,13 +185,18 @@
 }
 
 - (FJTextButton*)tagButton:(NSString*)tag {
-    FJTextButton *button = [[FJTextButton alloc] initWithFrame:CGRectMake(0, 0, _innerTagConfig.itemMinWidth, _innerTagConfig.itemMinHeight)];
-    [button setTitle:tag config:_innerTagConfig];
     
+    FJTextButton *button = [[FJTextButton alloc] initWithFrame:CGRectMake(0, 0, _innerTagConfig.itemMinWidth, _innerTagConfig.itemMinHeight)];
+    if (self.innerSelectedTags == nil || [self.innerSelectedTags count] == 0 || ![self.innerSelectedTags containsObject:tag]) {
+        [button setTitle:tag config:_innerTagConfig selected:NO];
+    }else{
+        [button setTitle:tag config:_innerTagConfig selected:YES];
+    }
+
     CGFloat textWidth = [tag singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
     CGFloat buttonWidth = textWidth + _innerTagConfig.itemPaddingLeft + _innerTagConfig.itemPaddingRight;
-    if (buttonWidth >= self.innerWidth) {
-        button.width = self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight - 1.0;
+    if (buttonWidth >= self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight) {
+        button.width = self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight;
     }else if (buttonWidth >= _innerTagConfig.itemMinWidth) {
         button.width = buttonWidth;
     }else {

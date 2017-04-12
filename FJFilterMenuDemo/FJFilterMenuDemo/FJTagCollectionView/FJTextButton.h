@@ -13,6 +13,8 @@
 
 - (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config;
 
+- (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config selected:(BOOL)selected;
+
 - (BOOL)selected;
 
 @end

@@ -10,6 +10,7 @@
 #import "ProductCollectionViewCell.h"
 #import "SearchFilterView.h"
 #import "ProductViewController.h"
+#import "ProductSearchResponse.h"
 
 @interface SearchResultViewController ()
 
@@ -26,6 +27,7 @@
 @property (nonatomic, assign) NSUInteger page;
 @property (nonatomic, assign) NSUInteger allpage;
 
+@property (nonatomic, assign) BOOL needUpdateCategory;
 
 @end
 
@@ -37,6 +39,17 @@
         _productSearchBar.width = UI_SCREEN_WIDTH;
         _productSearchBar.height = 24.0;
         self.navigationItem.titleView = _productSearchBar;
+        
+        __weak typeof(self) weakSelf = self;
+        _productSearchBar.tf_input.bk_shouldReturnBlock = ^BOOL(UITextField *textField) {
+            BOOL needRefresh = [weakSelf updateSearchCriteria:textField.text query:weakSelf.query];
+            if (needRefresh) {
+                [weakSelf.searchFilterView renderGroup:YES];
+                [weakSelf searchProductFirstPage];
+            }
+            [textField resignFirstResponder];
+            return YES;
+        };
     }
     
     return _productSearchBar;
@@ -87,6 +100,9 @@
                 {
                     [UIView animateWithDuration:0.24 animations:^{
                         [weakSelf searchFilterView].frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
+                    } completion:^(BOOL finished) {
+                        
+                        [weakSelf.searchFilterView renderGroup:NO];
                     }];
                     break;
                 }
@@ -134,6 +150,12 @@
                     [weakSelf.navigationController pushViewController:productVC animated:YES];
                     break;
                 }
+            }
+        }];
+        
+        [_collectionView setCollectionScrollActionBlock:^(FJ_CollectionScrollType type, UIScrollView *scrollView, CGFloat moveHeight, BOOL isUp) {
+            if (type == FJ_CollectionScrollBlockType_Scroll) {
+                [weakSelf.productSearchBar.tf_input resignFirstResponder];
             }
         }];
         
@@ -191,9 +213,20 @@
     [self.collectionView collectionView].mj_footer = footer;
 }
 
-- (void)updateSearchCriteria:(NSString*)key query:(QueryModel*)query {
+- (BOOL)updateSearchCriteria:(NSString*)key query:(QueryModel*)query {
+    
+    if ([key isEqualToString:self.key]) {
+        self.needUpdateCategory = NO;
+    }else{
+        self.needUpdateCategory = YES;
+    }
+    
     self.key = key;
     self.query = query;
+    
+    self.productSearchBar.tf_input.text = key;
+    
+    return self.needUpdateCategory;
 }
 
 
@@ -220,14 +253,16 @@
         key = self.key;
         query = self.query;
     }else if ([self.key length]) {
-        self.key = key;
+        key = self.key;
     }else{
         assert(@"Seach Key or Query Null");
     }
     
     __weak typeof(self) weakSelf = self;
     
-    [self.view startLoadingAnimation];
+    if (page == 0) {
+        [self.view startLoadingAnimation];
+    }
     [self searchProductData:page key:key query:query sortprice:self.sortprice sortdiscount:self.sortdiscount dataLoaded:^(NSUInteger page, NSUInteger allpage, id data, BOOL success, NSString *errmsg) {
         
         [weakSelf.view stopLoadingAnimation];
@@ -246,6 +281,13 @@
         
         if (page == 0) {
             [[weakSelf.collectionView collectionView] setContentOffset:CGPointMake(0, 0)];
+            if (self.needUpdateCategory) {
+                NSString *path = [[NSBundle mainBundle] pathForResource:@"category" ofType:@"json"];
+                NSString *respStr = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+                ProductSearchResponse *resp = [[ProductSearchResponse alloc] initWithString:respStr error:nil];
+                self.searchFilterView.group = resp.data.group;
+                self.needUpdateCategory = NO;
+            }
         }
         
         rendered == nil ? : rendered(page, allpage, success, errmsg);

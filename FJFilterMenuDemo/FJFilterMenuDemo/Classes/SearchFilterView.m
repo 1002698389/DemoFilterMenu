@@ -7,13 +7,26 @@
 //
 
 #import "SearchFilterView.h"
+#import "SearchFilterCategoryView.h"
+#import "NSArray+JSONModel.h"
+#import "FilterGroupCell.h"
+#import "FilterGroupHeaderView.h"
+#import "FJTagCollectionView.h"
+#import "FJTagConfig.h"
 
 @interface SearchFilterView()
 
-@property (nonatomic, strong) FJTableView *leftView;
-@property (nonatomic, strong) FJTableView *rightView;
+@property (nonatomic, strong) UIView *leftView;
+@property (nonatomic, strong) FJTableView *groupView;
+@property (nonatomic, strong) FJTableView *brandView;
+@property (nonatomic, strong) FJTableView *sellerView;
+@property (nonatomic, strong) FJTableView *priceView;
+@property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) SolidLine *headerLine;
 @property (nonatomic, strong) UIView *bottomView;
+@property (nonatomic, weak)   SearchFilterCategoryView *searchFilterCategoryView;
+@property (nonatomic, strong) FJTagConfig *tagConfig;
+@property (nonatomic, strong) NSMutableSet<NSString *> *selectedCategories;
 
 @end
 
@@ -110,15 +123,20 @@
         make.bottom.right.equalTo(weakBottomView).offset(-10.0);
     }];
     
-    // TableView
+    // LeftView
     [self leftView];
-    [self rightView];
+    // TableView
+    [self brandView];
+    [self sellerView];
+    [self priceView];
+    [self groupView];
     
 }
 
-- (FJTableView *)leftView {
+- (UIView *)leftView {
     if (_leftView == nil) {
-        _leftView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor yellowColor]];
+        _leftView = [[UIView alloc] init];
+        _leftView.backgroundColor = COLOR_TEXT_PURPLE;
         [self addSubview:_leftView];
         __weak typeof(self) weakSelf = self;
         [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -127,23 +145,250 @@
             make.bottom.equalTo(weakSelf.bottomView.mas_top);
             make.width.equalTo(@100);
         }];
+        
+        SolidLine *rightLine = [SolidLine line:CGRectZero orient:LineOrient_RectRight color:COLOR_GRAY_999999];
+        [_leftView addSubview:rightLine];
+        [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.right.bottom.equalTo(_leftView);
+            make.width.equalTo(@1);
+        }];
+        
+        SearchFilterCategoryView *categoryView = [[SearchFilterCategoryView alloc] init];
+        [_leftView addSubview:categoryView];
+        [categoryView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(_leftView);
+        }];
+        
+        categoryView.backgroundColor = COLOR_PURE_CLEAR;
+        // TODO
+        [categoryView addCategories:@[@"分类",@"品牌",@"商家",@"价格"]];
+        categoryView.categoryTapped = ^(NSUInteger index, NSString *category) {
+            NSLog(@"%d %@", (int)index, category);
+            switch (index) {
+                case 0:
+                {
+                    [self bringSubviewToFront:self.groupView];
+                    break;
+                }
+                case 1:
+                {
+                    [self bringSubviewToFront:self.brandView];
+                    break;
+                }
+                case 2:
+                {
+                    [self bringSubviewToFront:self.sellerView];
+                    break;
+                }
+                case 3:
+                {
+                    [self bringSubviewToFront:self.priceView];
+                    break;
+                }
+            }
+        };
+        
     }
     return _leftView;
 }
 
-- (FJTableView *)rightView {
-    if (_rightView == nil) {
-        _rightView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor greenColor]];
-        [self addSubview:_rightView];
+- (FJTableView *)groupView {
+    if (_groupView == nil) {
+        _groupView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor whiteColor]];
+        [self addSubview:_groupView];
         __weak typeof(self) weakSelf = self;
-        [_rightView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_groupView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(weakSelf.headerLine.mas_bottom);
+            make.left.equalTo(weakSelf.leftView.mas_right);
+            make.bottom.equalTo(weakSelf.bottomView.mas_top);
+            make.right.equalTo(weakSelf);
+        }];
+        
+        [_groupView setCellActionBlock:^(FJ_CellBlockType type, NSInteger row, NSInteger section, __kindof FJCellDataSource *cellData) {
+            if (type == FJ_CellBlockType_CellCustomizedTapped) {
+                FilterGroupCellDataSource *ds = cellData;
+                if (weakSelf.selectedCategories == nil) {
+                    weakSelf.selectedCategories = [[NSMutableSet alloc] init];
+                }
+                if (ds.selected) {
+                    [weakSelf.selectedCategories addObject:ds.selectedCategory];
+                }else{
+                    [weakSelf.selectedCategories removeObject:ds.selectedCategory];
+                }
+                NSLog(@"Selected Categories : %@", weakSelf.selectedCategories);
+                
+                for (FJMultiDataSource *mds in [weakSelf.groupView dataSource]) {
+                    for (FilterGroupCellDataSource *ds in mds.cellDataSources) {
+                        ds.selectedCategories = (NSArray<NSString *> *)weakSelf.selectedCategories;
+                    }
+                }
+                
+            }
+        }];
+    }
+    return _groupView;
+}
+
+- (FJTableView *)brandView {
+    if (_brandView == nil) {
+        _brandView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor redColor]];
+        [self addSubview:_brandView];
+        __weak typeof(self) weakSelf = self;
+        [_brandView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(weakSelf.headerLine.mas_bottom);
             make.left.equalTo(weakSelf.leftView.mas_right);
             make.bottom.equalTo(weakSelf.bottomView.mas_top);
             make.right.equalTo(weakSelf);
         }];
     }
-    return _rightView;
+    return _brandView;
+}
+
+- (FJTableView *)sellerView {
+    if (_sellerView == nil) {
+        _sellerView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor yellowColor]];
+        [self addSubview:_sellerView];
+        __weak typeof(self) weakSelf = self;
+        [_sellerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(weakSelf.headerLine.mas_bottom);
+            make.left.equalTo(weakSelf.leftView.mas_right);
+            make.bottom.equalTo(weakSelf.bottomView.mas_top);
+            make.right.equalTo(weakSelf);
+        }];
+    }
+    return _sellerView;
+}
+
+- (FJTableView *)priceView {
+    if (_priceView == nil) {
+        _priceView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor greenColor]];
+        [self addSubview:_priceView];
+        __weak typeof(self) weakSelf = self;
+        [_priceView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(weakSelf.headerLine.mas_bottom);
+            make.left.equalTo(weakSelf.leftView.mas_right);
+            make.bottom.equalTo(weakSelf.bottomView.mas_top);
+            make.right.equalTo(weakSelf);
+        }];
+    }
+    return _priceView;
+}
+
+- (UIActivityIndicatorView *)indicatorView {
+    if (_indicatorView == nil) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [self addSubview:_indicatorView];
+        __weak typeof(self) weakSelf = self;
+        [_indicatorView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.center.equalTo(weakSelf);
+        }];
+    }
+    [self bringSubviewToFront:_indicatorView];
+    _indicatorView.hidden = NO;
+    return _indicatorView;
+}
+
+- (void)setGroup:(NSMutableArray<ProductGroup> *)group {
+    if ([_group equal:group]) {
+        return;
+    }
+    _group = group;
+}
+
+- (void)renderGroup:(BOOL)refresh {
+    
+    // Render Group
+    [[self.groupView dataSource] removeAllObjects];
+    
+    // TODO Simulation
+    FJMultiDataSource *mds = [[FJMultiDataSource alloc] init];
+    mds.cellDataSources = (NSMutableArray<FJCellDataSource> *)[[NSMutableArray alloc] init];
+    
+    // Group Header View
+    FilterGroupHeaderViewDataSource *hds = [[FilterGroupHeaderViewDataSource alloc] init];
+    hds.rootCategory = @"男装";
+    mds.headerViewDataSource = hds;
+    // Group Cell
+    FilterGroupCellDataSource *fds = [[FilterGroupCellDataSource alloc] init];
+    fds.tagConfig = [self tagConfig];
+    fds.lastCategories = @[@"AAAAA",@"BBBB",@"CCCC",@"DDDD"];
+    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    [mds.cellDataSources addObject:fds];
+    [self.groupView addDataSource:mds];
+    
+    mds = [[FJMultiDataSource alloc] init];
+    mds.cellDataSources = (NSMutableArray<FJCellDataSource> *)[[NSMutableArray alloc] init];
+    // Group Header View
+    hds = [[FilterGroupHeaderViewDataSource alloc] init];
+    hds.rootCategory = @"女装";
+    mds.headerViewDataSource = hds;
+    // Group Cell
+    fds = [[FilterGroupCellDataSource alloc] init];
+    fds.tagConfig = [self tagConfig];
+    fds.lastCategories = @[@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄",@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄"];
+    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    [mds.cellDataSources addObject:fds];
+    [self.groupView addDataSource:mds];
+    
+    mds = [[FJMultiDataSource alloc] init];
+    mds.cellDataSources = (NSMutableArray<FJCellDataSource> *)[[NSMutableArray alloc] init];
+    // Group Header View
+    hds = [[FilterGroupHeaderViewDataSource alloc] init];
+    hds.rootCategory = @"童装";
+    mds.headerViewDataSource = hds;
+    // Group Cell
+    fds = [[FilterGroupCellDataSource alloc] init];
+    fds.tagConfig = [self tagConfig];
+    fds.lastCategories = @[@"EEEEEE",@"FF",@"GGGGGGGGGGGGGGGGGGGGGGGGGGGGG",@"KKKK"];
+    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    [mds.cellDataSources addObject:fds];
+    [self.groupView addDataSource:mds];
+    
+    if (refresh) {
+        for (FJMultiDataSource *mds in [self.groupView dataSource]) {
+            for (FilterGroupCellDataSource *ds in mds.cellDataSources) {
+                ds.selectedCategories = nil;
+            }
+        }
+    }
+    
+    [self.groupView refresh];
+}
+
+- (FJTagConfig *)tagConfig {
+
+    if (_tagConfig == nil) {
+        FJTagConfig *config = [FJTagConfig new];
+        config.enableMultiTap = YES;
+        config.tagTextFont = [UIFont systemFontOfSize:12.0];
+        config.tagTextColor = COLOR_GRAY_666666;
+        config.tagBackgroundColor = COLOR_TEXT_PURPLE;
+        config.tagBorderColor = COLOR_PURE_CLEAR;
+        config.tagBorderWidth = 0.5;
+        config.tagCornerRadius = 2.0;
+        config.itemMinWidth = 106.0;
+        config.itemMinHeight = 26.0;
+        config.paddingTop = 20.0;
+        config.paddingLeft = 20.0;
+        config.paddingBottom = 20.0;
+        config.paddingRight = 20.0;
+        config.itemHorizontalSpace = 18.0;
+        config.itemVerticalSpace = 16.0;
+        config.tagHighlightedTextFont = [UIFont systemFontOfSize:12.0];
+        config.tagHighlightedTextColor = COLOR_GRAY_333333;
+        config.tagHighlightedBackgroundColor = COLOR_PURE_WHITE;
+        config.tagHighlightedBorderColor = COLOR_GRAY_26241F;
+        config.selectedImage = @"icon_selected";
+        config.selectedImageSize = CGSizeMake(12.0, 12.0);
+        config.itemPaddingLeft = 5.0;
+        config.itemPaddingRight = 5.0;
+        config.debug = NO;
+        _tagConfig = config;
+    }
+    return _tagConfig;
 }
 
 /*

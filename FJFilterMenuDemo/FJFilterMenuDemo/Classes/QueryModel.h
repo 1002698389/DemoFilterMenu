@@ -3,7 +3,9 @@
 //  FJFilterMenuDemo
 //
 
-@interface QueryModel : JSONModel
+#import "MyModel.h"
+
+@interface QueryModel : MyModel
 
 @property (copy, nonatomic) NSString<Optional> *query;
 @property (copy, nonatomic) NSString<Optional> *brand;

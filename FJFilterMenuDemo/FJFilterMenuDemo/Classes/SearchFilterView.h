@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProductSearchResponse.h"
 
 @interface SearchFilterView : UIView
 
 - (void)setupUI;
+
+@property (nonatomic, strong) NSMutableArray<ProductGroup> *group;
+
+- (void)renderGroup:(BOOL)refresh;
 
 @end

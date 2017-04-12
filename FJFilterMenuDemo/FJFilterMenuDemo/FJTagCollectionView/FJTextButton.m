@@ -17,18 +17,46 @@
 @implementation FJTextButton
 
 - (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config {
+    [self setTitle:title config:config selected:NO];
+}
+
+- (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config selected:(BOOL)selected {
     
     self.config = config;
-    
     [self setTitle:title forState:UIControlStateNormal];
-    [self setTitleColor:config.tagTextColor forState:UIControlStateNormal];
-    [self setBackgroundColor:config.tagBackgroundColor];
-    self.titleLabel.font = config.tagTextFont;
-    if (config.tagBorderWidth > 0) {
-        [self cornerRadius:config.tagCornerRadius borderWidth:config.tagBorderWidth boderColor:config.tagBorderColor];
+    
+    UIColor *textColor = nil;
+    UIColor *backgroundColor = nil;
+    UIColor *borderColor = nil;
+    UIFont *textFont = nil;
+    UIImage *image = nil;
+    if (selected) {
+        self.tag = 1;
+        textColor = config.tagHighlightedTextColor;
+        backgroundColor = config.tagHighlightedBackgroundColor;
+        textFont = config.tagHighlightedTextFont;
+        borderColor = config.tagHighlightedBorderColor;
+        if ([self.config.selectedImage isKindOfClass:[NSString class]]) {
+            image = [UIImage imageNamed:self.config.selectedImage];
+        }else if ([self.config.selectedImage isKindOfClass:[UIImage class]]) {
+            image = self.config.selectedImage;
+        }
+    }else{
+        self.tag = 0;
+        textColor = config.tagTextColor;
+        backgroundColor = config.tagBackgroundColor;
+        textFont = config.tagTextFont;
+        borderColor = config.tagBorderColor;
+        
     }
     
-    
+    [self setTitleColor:textColor forState:UIControlStateNormal];
+    [self setBackgroundColor:backgroundColor];
+    self.titleLabel.font = textFont;
+    if (config.tagBorderWidth > 0) {
+        [self cornerRadius:config.tagCornerRadius borderWidth:config.tagBorderWidth boderColor:borderColor];
+    }
+    [self setImage:image forState:UIControlStateNormal];
     
     __weak typeof(self) weakSelf = self;
     [self bk_addEventHandler:^(id sender) {

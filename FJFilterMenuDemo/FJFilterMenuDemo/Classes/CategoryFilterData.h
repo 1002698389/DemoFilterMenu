@@ -3,6 +3,8 @@
 //  FJFilterMenuDemo
 //
 
+#import "MyModel.h"
+
 typedef NS_ENUM(NSInteger, CategoryFilterGroupType) {
     CategoryFilterGroupType_Category,
     CategoryFilterGroupType_Brand,
@@ -11,7 +13,7 @@ typedef NS_ENUM(NSInteger, CategoryFilterGroupType) {
 
 @protocol CategoryFilterSelectModel, CategoryFilterGroup;
 
-@interface CategoryFilterData : JSONModel
+@interface CategoryFilterData : MyModel
 
 @property (strong, nonatomic) NSMutableArray<CategoryFilterGroup,Optional> *catValues;
 @property (strong, nonatomic) NSMutableArray<CategoryFilterGroup,Optional> *brandValues;
@@ -19,14 +21,14 @@ typedef NS_ENUM(NSInteger, CategoryFilterGroupType) {
 
 @end
 
-@interface CategoryFilterGroup : JSONModel
+@interface CategoryFilterGroup : MyModel
 
 @property (strong, nonatomic) NSString<Optional> *groupName;
 @property (strong, nonatomic) NSMutableArray<CategoryFilterSelectModel,Optional> *items;
 
 @end
 
-@interface CategoryFilterSelectModel : JSONModel
+@interface CategoryFilterSelectModel : MyModel
 
 @property (assign, nonatomic) CategoryFilterGroupType type;
 @property (assign, nonatomic) BOOL selected;
