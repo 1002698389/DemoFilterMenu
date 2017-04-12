@@ -168,6 +168,21 @@
         _searchFilterView = [[SearchFilterView alloc] initWithFrame:CGRectMake(0, UI_SCREEN_HEIGHT, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
         [_searchFilterView setupUI];
         [MF_Key_Window addSubview:_searchFilterView];
+        
+        __weak typeof(self) weakSelf = self;
+        _searchFilterView.filterSelectedTuning = ^(id data) {
+            NSLog(@"%@",data);
+            if (data == nil) {
+                [weakSelf.searchTuneView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.equalTo(@SearchTuneBarView_Min_H);
+                }];
+            }else{
+                [weakSelf.searchTuneView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.equalTo(@SearchTuneBarView_Max_H);
+                }];
+                weakSelf.searchTuneView.filters = data;
+            }
+        };
     }
     return _searchFilterView;
 }

@@ -33,8 +33,10 @@
         btn.tag = i;
         if ([[categories firstObject] isEqual:category]) {
             btn.backgroundColor = COLOR_PURE_WHITE;
+            btn.selected = YES;
         }else{
             btn.backgroundColor = COLOR_PURE_CLEAR;
+            btn.selected = NO;
         }
         [self addSubview:btn];
         [btn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -62,10 +64,12 @@
                     if ([b isEqual:sender]) {
                         if (![b.backgroundColor isEqual:COLOR_PURE_WHITE]) {
                             [b setBackgroundColor:COLOR_PURE_WHITE];
+                            b.selected = YES;
                             weakSelf.categoryTapped == nil ? : weakSelf.categoryTapped(b.tag, b.titleLabel.text);
                         }
                     }else{
                         [b setBackgroundColor:COLOR_PURE_CLEAR];
+                        b.selected = NO;
                     }
                 }
             }
@@ -76,7 +80,18 @@
 
 // 更新是否有勾选项目
 - (void)updateSelected:(BOOL)selected {
-
+    for (UIButton *b in [self subviews]) {
+        if ([b isKindOfClass:[UIButton class]]) {
+            if (b.selected) {
+                if (selected) {
+                    [b setImage:[UIImage imageNamed:@"icon_filter_select"] forState:UIControlStateNormal];
+                }else{
+                    [b setImage:nil forState:UIControlStateNormal];
+                }
+                break;
+            }
+        }
+    }
 }
 
 /*

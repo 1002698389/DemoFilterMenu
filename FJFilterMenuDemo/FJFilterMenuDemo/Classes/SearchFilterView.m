@@ -72,9 +72,7 @@
     
     [iv_close setUserInteractionEnabled:YES];
     [iv_close bk_whenTapped:^{
-        [UIView animateWithDuration:0.24 animations:^{
-            weakSelf.frame = CGRectMake(0, UI_SCREEN_HEIGHT, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
-        }];
+        [weakSelf close];
     }];
     
     // 重置按钮
@@ -90,6 +88,7 @@
     }];
     
     [resetBtn bk_addEventHandler:^(id sender) {
+        [weakSelf renderGroup:YES];
         
     } forControlEvents:UIControlEventTouchUpInside];
     
@@ -122,6 +121,9 @@
         make.top.left.equalTo(weakBottomView).offset(10.0);
         make.bottom.right.equalTo(weakBottomView).offset(-10.0);
     }];
+    [bottomBtn bk_addEventHandler:^(id sender) {
+        [weakSelf close];
+    } forControlEvents:UIControlEventTouchUpInside];
     
     // LeftView
     [self leftView];
@@ -158,12 +160,14 @@
         [categoryView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(_leftView);
         }];
+        self.searchFilterCategoryView = categoryView;
         
         categoryView.backgroundColor = COLOR_PURE_CLEAR;
         // TODO
         [categoryView addCategories:@[@"分类",@"品牌",@"商家",@"价格"]];
         categoryView.categoryTapped = ^(NSUInteger index, NSString *category) {
             NSLog(@"%d %@", (int)index, category);
+            
             switch (index) {
                 case 0:
                 {
@@ -186,6 +190,8 @@
                     break;
                 }
             }
+            
+            [self bringSubviewToFront:_indicatorView];
         };
         
     }
@@ -206,23 +212,33 @@
         
         [_groupView setCellActionBlock:^(FJ_CellBlockType type, NSInteger row, NSInteger section, __kindof FJCellDataSource *cellData) {
             if (type == FJ_CellBlockType_CellCustomizedTapped) {
-                FilterGroupCellDataSource *ds = cellData;
-                if (weakSelf.selectedCategories == nil) {
-                    weakSelf.selectedCategories = [[NSMutableSet alloc] init];
-                }
-                if (ds.selected) {
-                    [weakSelf.selectedCategories addObject:ds.selectedCategory];
-                }else{
-                    [weakSelf.selectedCategories removeObject:ds.selectedCategory];
-                }
-                NSLog(@"Selected Categories : %@", weakSelf.selectedCategories);
-                
-                for (FJMultiDataSource *mds in [weakSelf.groupView dataSource]) {
-                    for (FilterGroupCellDataSource *ds in mds.cellDataSources) {
-                        ds.selectedCategories = (NSArray<NSString *> *)weakSelf.selectedCategories;
+                if ([cellData isKindOfClass:[FilterGroupCellDataSource class]]) {
+                    FilterGroupCellDataSource *ds = cellData;
+                    if (weakSelf.selectedCategories == nil) {
+                        weakSelf.selectedCategories = [[NSMutableSet alloc] init];
                     }
-                }
+                    if (ds.selected) {
+                        [weakSelf.selectedCategories addObject:ds.selectedCategory];
+                    }else{
+                        [weakSelf.selectedCategories removeObject:ds.selectedCategory];
+                    }
+                    NSLog(@"Selected Categories : %@", weakSelf.selectedCategories);
+                    
+                    if ([weakSelf.selectedCategories count] > 0) {
+                        [weakSelf.searchFilterCategoryView updateSelected:YES];
+                    }else{
+                        [weakSelf.searchFilterCategoryView updateSelected:NO];
+                    }
+                    
+                    // TODO(加载品牌、商家和价格数据)
+                    [weakSelf.indicatorView startAnimating];
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [weakSelf.indicatorView stopAnimating];
+                        weakSelf.indicatorView.hidden = YES;
+                    });
+                }else if ([cellData isKindOfClass:[FilterGroupHeaderViewDataSource class]]) {
                 
+                }
             }
         }];
     }
@@ -280,12 +296,28 @@
         [self addSubview:_indicatorView];
         __weak typeof(self) weakSelf = self;
         [_indicatorView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.center.equalTo(weakSelf);
+            make.centerX.equalTo(weakSelf.mas_centerX).offset(50.0);
+            make.centerY.equalTo(weakSelf.mas_centerY);
         }];
     }
     [self bringSubviewToFront:_indicatorView];
     _indicatorView.hidden = NO;
     return _indicatorView;
+}
+
+- (void)close {
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.24 animations:^{
+        weakSelf.frame = CGRectMake(0, UI_SCREEN_HEIGHT, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
+    } completion:^(BOOL finished) {
+        // TODO (选中的Tuning参数)
+        CategoryFilterSelectModel *filter = [[CategoryFilterSelectModel alloc] init];
+        filter.type = CategoryFilterGroupType_Category;
+        filter.selected = YES;
+        filter.name = @"线裤";
+        
+        weakSelf.filterSelectedTuning == nil ? : weakSelf.filterSelectedTuning(@[filter,filter,filter,filter,filter,filter]);
+    }];
 }
 
 - (void)setGroup:(NSMutableArray<ProductGroup> *)group {
@@ -296,6 +328,11 @@
 }
 
 - (void)renderGroup:(BOOL)refresh {
+    
+    // Refresh
+    if (refresh) {
+        [self.selectedCategories removeAllObjects];
+    }
     
     // Render Group
     [[self.groupView dataSource] removeAllObjects];
@@ -312,7 +349,7 @@
     FilterGroupCellDataSource *fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = @[@"AAAAA",@"BBBB",@"CCCC",@"DDDD"];
-    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
@@ -327,7 +364,7 @@
     fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = @[@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄",@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄"];
-    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
@@ -342,19 +379,15 @@
     fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = @[@"EEEEEE",@"FF",@"GGGGGGGGGGGGGGGGGGGGGGGGGGGGG",@"KKKK"];
-    fds.selectedCategories = (NSArray<NSString *> *)self.selectedCategories;
+    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
     
     if (refresh) {
-        for (FJMultiDataSource *mds in [self.groupView dataSource]) {
-            for (FilterGroupCellDataSource *ds in mds.cellDataSources) {
-                ds.selectedCategories = nil;
-            }
-        }
+        [[self.groupView tableView] setContentOffset:CGPointZero];
     }
-    
+
     [self.groupView refresh];
 }
 

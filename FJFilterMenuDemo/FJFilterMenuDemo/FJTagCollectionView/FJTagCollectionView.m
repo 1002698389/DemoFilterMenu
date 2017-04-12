@@ -75,6 +75,8 @@
     [self.innerTags addObjectsFromArray:tags];
     if (selectedTags != nil && [selectedTags count] > 0) {
         [self.innerSelectedTags addObjectsFromArray:selectedTags];
+    }else{
+        [self.innerSelectedTags removeAllObjects];
     }
     if (config != nil) {
         self.innerTagConfig = config;

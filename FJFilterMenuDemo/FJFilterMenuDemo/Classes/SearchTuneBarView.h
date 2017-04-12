@@ -15,10 +15,10 @@
 
 @property (strong, nonatomic) SearchTuneBar *tuneBar;
 
-@property (copy, nonatomic) void (^tuneViewDeleteBlock)(CategoryFilterSelectModel *filterModel);
+@property (copy, nonatomic) void (^tuneViewDeleteBlock)(CategoryFilterSelectModel *filter);
 
 // 筛选数据
-@property (strong, nonatomic) NSMutableArray *filters;
+@property (strong, nonatomic) NSMutableArray<CategoryFilterSelectModel *> *filters;
 
 - (void)setScrollToTop:(BOOL)toTop;
 

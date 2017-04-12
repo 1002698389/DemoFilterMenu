@@ -11,9 +11,11 @@
 
 @interface SearchFilterView : UIView
 
-- (void)setupUI;
-
 @property (nonatomic, strong) NSMutableArray<ProductGroup> *group;
+
+@property (nonatomic, copy) void(^filterSelectedTuning)(id data);
+
+- (void)setupUI;
 
 - (void)renderGroup:(BOOL)refresh;
 
