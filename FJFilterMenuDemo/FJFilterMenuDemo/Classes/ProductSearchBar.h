@@ -11,8 +11,8 @@
 typedef NS_ENUM(NSInteger, PrdSearchBarState) {
     PrdSearchBarState_None,                 // 显示
     PrdSearchBarState_Begin,                // 焦点集中
-    PrdSearchBarState_Editing,
-    PrdSearchBarState_Return
+    PrdSearchBarState_Editing,              // 编辑
+    PrdSearchBarState_Return                // 键盘返回
 };
 
 typedef void(^PrdSearchBarBlock)(PrdSearchBarState state, NSString *value);
@@ -21,6 +21,6 @@ typedef void(^PrdSearchBarBlock)(PrdSearchBarState state, NSString *value);
 
 @property (nonatomic, weak) IBOutlet UITextField *tf_input;
 
-@property (nonatomic, copy) PrdSearchBarBlock prdSearchBarBlock;
+@property (nonatomic, copy) void(^prdSearchBarBlock)(PrdSearchBarState state, NSString *value);
 
 @end

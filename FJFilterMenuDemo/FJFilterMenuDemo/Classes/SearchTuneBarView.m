@@ -4,14 +4,16 @@
 //
 
 #import "SearchTuneBarView.h"
-#import "CatFilterTagButton.h"
+#import "FilterTagButton.h"
 
 @interface SearchTuneBarView ()
 
 @property (weak, nonatomic) IBOutlet UIView *v_bm;
 @property (weak, nonatomic) IBOutlet UIScrollView *sv_filter;
-
 @property (strong, nonatomic) NSMutableArray *tagArray;
+
+// 筛选数据
+@property (strong, nonatomic) NSMutableArray<FilterSelectModel *> *filters;
 
 @end
 
@@ -34,19 +36,20 @@
     return _tuneBar;
 }
 
-- (void)setFilters:(NSMutableArray *)filters
+// 设置筛选结果数据
+- (void)setFilters:(NSMutableArray<FilterSelectModel *> *)filters
 {
     _filters = filters;
     if ([filters count] > 0) {
         self.v_bm.hidden = NO;
-        self.tuneBar.hasFilter = YES;
+        [self.tuneBar setSearchTabHighlighted:YES];
     }else {
         self.v_bm.hidden = YES;
-        self.tuneBar.hasFilter = NO;
+        [self.tuneBar setSearchTabHighlighted:NO];
     }
     
     if (self.tagArray.count  > 0) {
-        for (CatFilterTagButton *tagBtn in self.tagArray) {
+        for (FilterTagButton *tagBtn in self.tagArray) {
             [tagBtn removeFromSuperview];
         }
         [self.tagArray removeAllObjects];
@@ -56,26 +59,27 @@
     MF_WEAK_SELF(self);
     CGFloat btnX = 0;
     for (int i=0; i< filters.count; i++) {
-        CategoryFilterSelectModel *model = [filters objectAtIndex:i];
+        FilterSelectModel *model = [filters objectAtIndex:i];
         NSString *name = model.name;
-        CatFilterTagButton *btn = MF_LOAD_NIB(@"CatFilterTagButton");
+        FilterTagButton *btn = MF_LOAD_NIB(@"FilterTagButton");
         btn.tag = i;
-        btn.keyText = name;
-        btn.frame = CGRectMake(btnX, 0, btn.catWidth, CatFilterTagButton_Width);
+        [btn setTagName:name];
+        btn.frame = CGRectMake(btnX, 0, [btn tagButtonWidth], FilterTagButton_Width);
         btn.deleteBlock = ^(NSInteger tag){
-            CategoryFilterSelectModel *model = [weakSelf.filters objectAtIndex:tag];
-            MF_BLOCK_CALL(weakSelf.tuneViewDeleteBlock, model);
+            FilterSelectModel *model = [weakSelf.filters objectAtIndex:tag];
+            MF_BLOCK_CALL(weakSelf.filterTagButtonDeleteBlock, model);
         };
         
         [self.sv_filter addSubview:btn];
         [self.tagArray addObject:btn];
         
-        btnX += btn.catWidth + 10.0;
+        btnX += [btn tagButtonWidth] + 10.0;
     }
     
     self.sv_filter.contentSize = CGSizeMake(btnX, 0);
 }
 
+// 滚动至最前端
 - (void)setScrollToTop:(BOOL)toTop
 {
     self.sv_filter.scrollsToTop = toTop;

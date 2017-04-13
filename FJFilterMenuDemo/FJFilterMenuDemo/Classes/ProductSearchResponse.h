@@ -5,7 +5,6 @@
 
 #import "GoodsBase.h"
 #import "PageModel.h"
-#import "CategoryFilterData.h"
 #import "MyModel.h"
 
 @class ProductSearchData, ProductGroup, ProductGroupBase;

@@ -9,10 +9,16 @@
 #import "SearchFilterView.h"
 #import "SearchFilterCategoryView.h"
 #import "NSArray+JSONModel.h"
-#import "FilterGroupCell.h"
-#import "FilterGroupHeaderView.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
+#import "FilterGroupCell.h"
+#import "FilterGroupHeaderView.h"
+#import "FilterTuningBrandCell.h"
+#import "FilterTuningSellerCell.h"
+#import "FilterPriceCell.h"
+#import "FilterCustomPriceCell.h"
+#import "FilterSelectModel.h"
+#import "NSArray+FJTagModel.h"
 
 @interface SearchFilterView()
 
@@ -26,12 +32,49 @@
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, weak)   SearchFilterCategoryView *searchFilterCategoryView;
 @property (nonatomic, strong) FJTagConfig *tagConfig;
-@property (nonatomic, strong) NSMutableSet<NSString *> *selectedCategories;
+
+
+@property (nonatomic, strong) NSMutableArray<FilterSelectModel *> *selectedCategories;
+@property (nonatomic, strong) NSMutableArray<FilterSelectModel *> *selectedBrands;
+@property (nonatomic, strong) NSMutableArray<FilterSelectModel *> *selectedSellers;
+@property (nonatomic, strong) FilterSelectModel *selectedPrice;
+
 
 @end
 
 @implementation SearchFilterView
 
+- (NSMutableArray<FilterSelectModel *> *)selectedCategories {
+    if (_selectedCategories == nil) {
+        _selectedCategories = (NSMutableArray<FilterSelectModel *> *)[[NSMutableArray alloc] init];
+    }
+    return _selectedCategories;
+}
+
+- (NSMutableArray<FilterSelectModel *> *)selectedBrands {
+    if (_selectedBrands == nil) {
+        _selectedBrands = (NSMutableArray<FilterSelectModel *> *)[[NSMutableArray alloc] init];
+    }
+    return _selectedBrands;
+}
+
+- (NSMutableArray<FilterSelectModel *> *)selectedSellers {
+    if (_selectedSellers == nil) {
+        _selectedSellers = (NSMutableArray<FilterSelectModel *> *)[[NSMutableArray alloc] init];
+    }
+    return _selectedSellers;
+}
+
+- (FilterSelectModel *)selectedPrice {
+    if (_selectedPrice == nil) {
+        _selectedPrice = [[FilterSelectModel alloc] init];
+        _selectedPrice.type = FilterType_Price;
+    }
+    return _selectedPrice;
+}
+
+
+// 初始化UI
 - (void)setupUI {
     
     __weak typeof(self) weakSelf = self;
@@ -89,6 +132,7 @@
     
     [resetBtn bk_addEventHandler:^(id sender) {
         [weakSelf renderGroup:YES];
+        [weakSelf renderTuning:YES inloading:YES];
         
     } forControlEvents:UIControlEventTouchUpInside];
     
@@ -122,7 +166,7 @@
         make.bottom.right.equalTo(weakBottomView).offset(-10.0);
     }];
     [bottomBtn bk_addEventHandler:^(id sender) {
-        [weakSelf close];
+        [weakSelf confirm];
     } forControlEvents:UIControlEventTouchUpInside];
     
     // LeftView
@@ -171,22 +215,22 @@
             switch (index) {
                 case 0:
                 {
-                    [self bringSubviewToFront:self.groupView];
+                    [weakSelf bringSubviewToFront:weakSelf.groupView];
                     break;
                 }
                 case 1:
                 {
-                    [self bringSubviewToFront:self.brandView];
+                    [weakSelf bringSubviewToFront:weakSelf.brandView];
                     break;
                 }
                 case 2:
                 {
-                    [self bringSubviewToFront:self.sellerView];
+                    [weakSelf bringSubviewToFront:weakSelf.sellerView];
                     break;
                 }
                 case 3:
                 {
-                    [self bringSubviewToFront:self.priceView];
+                    [weakSelf bringSubviewToFront:weakSelf.priceView];
                     break;
                 }
             }
@@ -214,13 +258,12 @@
             if (type == FJ_CellBlockType_CellCustomizedTapped) {
                 if ([cellData isKindOfClass:[FilterGroupCellDataSource class]]) {
                     FilterGroupCellDataSource *ds = cellData;
-                    if (weakSelf.selectedCategories == nil) {
-                        weakSelf.selectedCategories = [[NSMutableSet alloc] init];
-                    }
                     if (ds.selected) {
-                        [weakSelf.selectedCategories addObject:ds.selectedCategory];
+                        if (![weakSelf.selectedCategories containsTagModel:ds.selectedCategory]) {
+                             [weakSelf.selectedCategories addObject:ds.selectedCategory];
+                        }
                     }else{
-                        [weakSelf.selectedCategories removeObject:ds.selectedCategory];
+                        [weakSelf.selectedCategories removeTagModel:ds.selectedCategory];
                     }
                     NSLog(@"Selected Categories : %@", weakSelf.selectedCategories);
                     
@@ -237,7 +280,7 @@
                         weakSelf.indicatorView.hidden = YES;
                     });
                 }else if ([cellData isKindOfClass:[FilterGroupHeaderViewDataSource class]]) {
-                
+                    
                 }
             }
         }];
@@ -247,7 +290,7 @@
 
 - (FJTableView *)brandView {
     if (_brandView == nil) {
-        _brandView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor redColor]];
+        _brandView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor whiteColor]];
         [self addSubview:_brandView];
         __weak typeof(self) weakSelf = self;
         [_brandView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -256,13 +299,28 @@
             make.bottom.equalTo(weakSelf.bottomView.mas_top);
             make.right.equalTo(weakSelf);
         }];
+        
+        [_brandView setCellActionBlock:^(FJ_CellBlockType type, NSInteger row, NSInteger section, __kindof FJCellDataSource *cellData) {
+            if (type == FJ_CellBlockType_CellCustomizedTapped) {
+                if ([cellData isKindOfClass:[FilterTuningBrandCellDataSource class]]) {
+                    FilterTuningBrandCellDataSource *ds = cellData;
+                    if (ds.brand.selected) {
+                        if (![weakSelf.selectedBrands containsTagModel:ds.brand]) {
+                            [weakSelf.selectedBrands addObject:ds.brand];
+                        }
+                    }else{
+                        [weakSelf.selectedBrands removeTagModel:ds.brand];
+                    }
+                }
+            }
+        }];
     }
     return _brandView;
 }
 
 - (FJTableView *)sellerView {
     if (_sellerView == nil) {
-        _sellerView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor yellowColor]];
+        _sellerView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor whiteColor]];
         [self addSubview:_sellerView];
         __weak typeof(self) weakSelf = self;
         [_sellerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -271,13 +329,28 @@
             make.bottom.equalTo(weakSelf.bottomView.mas_top);
             make.right.equalTo(weakSelf);
         }];
+        
+        [_sellerView setCellActionBlock:^(FJ_CellBlockType type, NSInteger row, NSInteger section, __kindof FJCellDataSource *cellData) {
+            if (type == FJ_CellBlockType_CellCustomizedTapped) {
+                if ([cellData isKindOfClass:[FilterTuningSellerCellDataSource class]]) {
+                    FilterTuningSellerCellDataSource *ds = cellData;
+                    if (ds.seller.selected) {
+                        if (![weakSelf.selectedSellers containsTagModel:ds.seller]) {
+                            [weakSelf.selectedSellers addObject:ds.seller];
+                        }
+                    }else{
+                        [weakSelf.selectedSellers removeTagModel:ds.seller];
+                    }
+                }
+            }
+        }];
     }
     return _sellerView;
 }
 
 - (FJTableView *)priceView {
     if (_priceView == nil) {
-        _priceView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor greenColor]];
+        _priceView = [FJTableView FJTableView:CGRectZero editStyle:0 seperatorStyle:0 bgColor:[UIColor whiteColor]];
         [self addSubview:_priceView];
         __weak typeof(self) weakSelf = self;
         [_priceView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -309,14 +382,19 @@
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.24 animations:^{
         weakSelf.frame = CGRectMake(0, UI_SCREEN_HEIGHT, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
+    }];
+}
+
+- (void)confirm {
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.24 animations:^{
+        weakSelf.frame = CGRectMake(0, UI_SCREEN_HEIGHT, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
         // TODO (选中的Tuning参数)
-        CategoryFilterSelectModel *filter = [[CategoryFilterSelectModel alloc] init];
-        filter.type = CategoryFilterGroupType_Category;
-        filter.selected = YES;
-        filter.name = @"线裤";
+        // TODO Category
+        // TODO Brand / Seller / Price
         
-        weakSelf.filterSelectedTuning == nil ? : weakSelf.filterSelectedTuning(@[filter,filter,filter,filter,filter,filter]);
+        weakSelf.filterSelectedTuning == nil ? : weakSelf.filterSelectedTuning(self.selectedCategories, self.selectedBrands, self.selectedSellers, self.selectedPrice);
     }];
 }
 
@@ -327,6 +405,7 @@
     _group = group;
 }
 
+// 加载Category
 - (void)renderGroup:(BOOL)refresh {
     
     // Refresh
@@ -348,8 +427,8 @@
     // Group Cell
     FilterGroupCellDataSource *fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
-    fds.lastCategories = @[@"AAAAA",@"BBBB",@"CCCC",@"DDDD"];
-    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
+    fds.lastCategories = [FilterSelectModel fake:@[@"AAAAA",@"BBBB",@"CCCC",@"DDDD"] type:FilterType_Category];
+    fds.selectedCategories = self.selectedCategories;
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
@@ -363,8 +442,8 @@
     // Group Cell
     fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
-    fds.lastCategories = @[@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄",@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄"];
-    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
+    fds.lastCategories = [FilterSelectModel fake:@[@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄",@"外衣",@"视频",@"新闻",@"全球",@"孙武",@"孙文",@"HelloKitty",@"药物",@"琼瑶",@"好一些",@"没有了"] type:FilterType_Category];
+    fds.selectedCategories = self.selectedCategories;
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
@@ -378,8 +457,8 @@
     // Group Cell
     fds = [[FilterGroupCellDataSource alloc] init];
     fds.tagConfig = [self tagConfig];
-    fds.lastCategories = @[@"EEEEEE",@"FF",@"GGGGGGGGGGGGGGGGGGGGGGGGGGGGG",@"KKKK"];
-    fds.selectedCategories = (NSArray<NSString *> *)[self.selectedCategories allObjects];
+    fds.lastCategories = [FilterSelectModel fake:@[@"EEEEEE",@"FF",@"FF",@"GGGGGGGGGGGGGGGGGGGGGGGGGGGGG",@"KKKK"] type:FilterType_Category];
+    fds.selectedCategories = self.selectedCategories;
     fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
@@ -387,12 +466,70 @@
     if (refresh) {
         [[self.groupView tableView] setContentOffset:CGPointZero];
     }
-
+    
     [self.groupView refresh];
 }
 
-- (FJTagConfig *)tagConfig {
+// 加载品牌、商家、价格
+- (void)renderTuning:(BOOL)refresh inloading:(BOOL)inloading {
+    
+    // Refresh
+    if (refresh) {
+        [self.selectedBrands removeAllObjects];
+        [self.selectedSellers removeAllObjects];
+        self.selectedPrice = nil;
+    }
+    
+    // Render Brand、Seller、Price
+    if ([[self.brandView dataSource] count] > 0) {
+        [[self.brandView dataSource] removeAllObjects];
+        [self.brandView refresh];
+    }
+    if ([[self.sellerView dataSource] count] > 0) {
+        [[self.sellerView dataSource] removeAllObjects];
+        [self.sellerView refresh];
+    }
+    if ([[self.priceView dataSource] count] > 0) {
+        [[self.priceView dataSource] removeAllObjects];
+        [self.priceView refresh];
+    }
+    
+    if (inloading) {
+        self.brandView.fj_view_bgColor  = COLOR_PURE_WHITE;
+        self.sellerView.fj_view_bgColor = COLOR_PURE_WHITE;
+        self.priceView.fj_view_bgColor  = COLOR_PURE_WHITE;
+        return;
+    }
+    
+    // Brand
+    for (int i = 0; i < 20; i++) {
+        FilterTuningBrandCellDataSource *bds = [[FilterTuningBrandCellDataSource alloc] init];
+        FilterSelectModel *brand = [FilterSelectModel filterSelectModel:FilterType_Brand name:[NSString stringWithFormat:@"Nike%d",i]];
+        bds.brand = brand;
+        [self.brandView addDataSource:bds];
+    }
+    [self.brandView refresh];
+    
+    // Seller
+    for (int i = 0; i < 20; i++) {
+        FilterTuningSellerCellDataSource *sds = [[FilterTuningSellerCellDataSource alloc] init];
+        FilterSelectModel *seller = [FilterSelectModel filterSelectModel:FilterType_Brand name:[NSString stringWithFormat:@"Amazon%d",i]];
+        sds.seller = seller;
+        [self.sellerView addDataSource:sds];
+    }
+    [self.sellerView refresh];
+    
+    // Price
+    FilterPriceCellDataSource *pds = [[FilterPriceCellDataSource alloc] init];
+    pds.allPrice = YES;
+    [self.priceView addDataSource:pds];
+    FilterCustomPriceCellDataSource *pcds = [[FilterCustomPriceCellDataSource alloc] init];
+    [self.priceView addDataSource:pcds];
+    [self.priceView refresh];
+}
 
+- (FJTagConfig *)tagConfig {
+    
     if (_tagConfig == nil) {
         FJTagConfig *config = [FJTagConfig new];
         config.enableMultiTap = YES;

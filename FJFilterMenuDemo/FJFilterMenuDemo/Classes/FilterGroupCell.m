@@ -9,6 +9,7 @@
 #import "FilterGroupCell.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
+#import "NSArray+FJTagModel.h"
 
 @interface FilterGroupCell()
 
@@ -45,7 +46,7 @@
         [self addSubview:_tagView];
         [_tagView setTagViewWidth:UI_SCREEN_WIDTH - 100.0];
         __weak typeof(self) weakSelf = self;
-        _tagView.tagMultiTappedBlock = ^(NSString *tag, BOOL selected) {
+        _tagView.tagMultiTappedBlock = ^(__kindof FJTagModel *tag, BOOL selected) {
             FilterGroupCellDataSource *ds = weakSelf.cellDataSource;
             ds.selectedCategory = tag;
             ds.selected = selected;

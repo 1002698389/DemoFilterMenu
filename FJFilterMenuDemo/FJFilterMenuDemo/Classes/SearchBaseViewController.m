@@ -13,6 +13,8 @@
 #import "SearchAutomatedView.h"
 #import "SearchResultViewController.h"
 #import "MessageViewController.h"
+#import "RecentSearchModel.h"
+#import "NSArray+FJTagModel.h"
 
 #define LeftViewMargin  (10.0 + 5.0)
 #define TextFieldHeight (24.0)
@@ -252,17 +254,20 @@
     // 保存Recent Search
     NSString *trimmedTag = [tag trimString:TrimType_WhiteSpaneAndNewline];
     if (trimmedTag.length > 0 && save) {
-        NSMutableArray *recentSearchTags = [FJStorage value_nsobject:@"RecentSearch"];
-        if (recentSearchTags == nil || [recentSearchTags count] == 0) {
-            recentSearchTags = [NSMutableArray arrayWithArray:recentSearchTags];
-            [recentSearchTags addObject:trimmedTag];
-            [FJStorage save_nsobject:recentSearchTags key:@"RecentSearch"];
-        }else{
-            
-            NSMutableSet *recentPool = [NSMutableSet setWithArray:recentSearchTags];
-            [recentPool addObject:trimmedTag];
-            [FJStorage save_nsobject:[recentPool allObjects] key:@"RecentSearch"];
+        RecentSearchModel *recentSearchModel = [FJStorage value_jsonmodel:@"RecentSearchModel" key:@"RecentSearch"];
+        if (recentSearchModel == nil) {
+            recentSearchModel = [[RecentSearchModel alloc] init];
         }
+        if (recentSearchModel.history == nil) {
+            recentSearchModel.history = (NSMutableArray<FJTagModel> *)[[NSMutableArray alloc] init];
+            [recentSearchModel.history addObject:[FJTagModel tagName:tag]];
+            [FJStorage save_jsonmodel:recentSearchModel key:@"RecentSearch"];
+        }
+        if (![recentSearchModel.history containsTagName:tag]) {
+            [recentSearchModel.history addObject:[FJTagModel tagName:tag]];
+            [FJStorage save_jsonmodel:recentSearchModel key:@"RecentSearch"];
+        }
+        
     }
     
     [_searchHistoryView removeFromSuperview];

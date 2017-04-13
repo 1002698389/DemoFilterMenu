@@ -21,8 +21,10 @@
 @property (nonatomic, weak) IBOutlet UILabel *lb_price;
 @property (nonatomic, weak) IBOutlet UILabel *lb_filter;
 
-@property (nonatomic, assign) SearchTuneValue value;
+@property (nonatomic, assign) SearchTab tab;
 @property (nonatomic, assign) BOOL price_asc;
+
+@property (assign, nonatomic) BOOL searchTabHighlighted;
 
 @end
 
@@ -32,12 +34,12 @@
     [super awakeFromNib];
     [self layoutIfNeeded];
     
-    self.value = SearchTuneValue_Hot;
+    self.tab = SearchTab_Hot;
     self.price_asc = YES;
-    self.btn_hot.tag = SearchTuneValue_Hot;
-    self.btn_discount.tag = SearchTuneValue_Discount;
-    self.btn_price.tag = SearchTuneValue_Price;
-    self.btn_filter.tag = SearchTuneValue_Filter;
+    self.btn_hot.tag = SearchTab_Hot;
+    self.btn_discount.tag = SearchTab_Discount;
+    self.btn_price.tag = SearchTab_Price;
+    self.btn_filter.tag = SearchTab_Filter;
     
     self.btn_hot.titleLabel.font = [UIFont systemFontOfSize:14.0];
     self.btn_discount.titleLabel.font = [UIFont systemFontOfSize:14.0];
@@ -64,27 +66,27 @@
     
 }
 
-- (void)setHasFilter:(BOOL)hasFilter
-{
-    _hasFilter = hasFilter;
-    
-    if (hasFilter) {
+// 高亮Search Tab
+- (void)setSearchTabHighlighted:(BOOL)searchTabHighlighted {
+    _searchTabHighlighted = searchTabHighlighted;
+    if (searchTabHighlighted) {
         self.lb_filter.textColor = COLOR_SELECT;
     }else {
         self.lb_filter.textColor = COLOR_UNSELECT;
     }
 }
 
-- (void)selecteTab:(SearchTuneValue)value
+// 点击某个Search Tab(有些是排序、有些是单击选项)
+- (void)selecetSearchTab:(SearchTab)tab
 {
-    switch (value) {
-        case SearchTuneValue_Hot:
+    switch (tab) {
+        case SearchTab_Hot:
         {
-            if (self.value == SearchTuneValue_Hot) {
+            if (self.tab == SearchTab_Hot) {
                 return;
             }
             
-            self.value = SearchTuneValue_Hot;
+            self.tab = SearchTab_Hot;
             
             // UI
             [self.iv_asc setHighlighted:NO];
@@ -95,13 +97,13 @@
         }
             break;
             
-        case SearchTuneValue_Discount:
+        case SearchTab_Discount:
         {
-            if (self.value == SearchTuneValue_Discount) {
+            if (self.tab == SearchTab_Discount) {
                 return;
             }
             
-            self.value = SearchTuneValue_Discount;
+            self.tab = SearchTab_Discount;
             
             // UI
             [self.iv_asc setHighlighted:NO];
@@ -111,12 +113,12 @@
             self.lb_price.textColor = COLOR_UNSELECT;
         }
             break;
-        case SearchTuneValue_Price:
+        case SearchTab_Price:
         {
-            if (self.value == SearchTuneValue_Price) {
+            if (self.tab == SearchTab_Price) {
                 self.price_asc = !self.price_asc;
             }else{
-                self.value = SearchTuneValue_Price;
+                self.tab = SearchTab_Price;
             }
             
             // UI
@@ -132,28 +134,25 @@
             self.lb_price.textColor = COLOR_SELECT;
         }
             break;
-        case SearchTuneValue_Filter:
+        case SearchTab_Filter:
         {
         }
-            break;
-            
-        default:
             break;
     }
 }
 
 - (void)tap:(UIButton*)btn {
-    SearchTuneValue value = btn.tag;
+    SearchTab tab = (SearchTab)btn.tag;
     
-    switch (value) {
-        case SearchTuneValue_Hot:
+    switch (tab) {
+        case SearchTab_Hot:
         {
-            if (self.value == SearchTuneValue_Hot) {
+            if (self.tab == SearchTab_Hot) {
                 return;
             }
             
-            self.value = SearchTuneValue_Hot;
-            MF_BLOCK_CALL_2_P(self.searchTuneBarBlock, SearchTuneValue_Hot, NO);
+            self.tab = SearchTab_Hot;
+            MF_BLOCK_CALL_2_P(self.searchTabTappedBlock, SearchTab_Hot, NO);
             
             // UI
             [self.iv_asc setHighlighted:NO];
@@ -164,14 +163,14 @@
         }
             break;
         
-        case SearchTuneValue_Discount:
+        case SearchTab_Discount:
         {
-            if (self.value == SearchTuneValue_Discount) {
+            if (self.tab == SearchTab_Discount) {
                 return;
             }
             
-            self.value = SearchTuneValue_Discount;
-            MF_BLOCK_CALL_2_P(self.searchTuneBarBlock, SearchTuneValue_Discount, NO);
+            self.tab = SearchTab_Discount;
+            MF_BLOCK_CALL_2_P(self.searchTabTappedBlock, SearchTab_Discount, NO);
             
             // UI
             [self.iv_asc setHighlighted:NO];
@@ -181,14 +180,14 @@
             self.lb_price.textColor = COLOR_UNSELECT;
         }
             break;
-        case SearchTuneValue_Price:
+        case SearchTab_Price:
         {
-            if (self.value == SearchTuneValue_Price) {
+            if (self.tab == SearchTab_Price) {
                 self.price_asc = !self.price_asc;
             }else{
-                self.value = SearchTuneValue_Price;
+                self.tab = SearchTab_Price;
             }
-            MF_BLOCK_CALL_2_P(self.searchTuneBarBlock, SearchTuneValue_Price, self.price_asc);
+            MF_BLOCK_CALL_2_P(self.searchTabTappedBlock, SearchTab_Price, self.price_asc);
             
             // UI
             if (self.price_asc) {
@@ -203,9 +202,9 @@
             self.lb_price.textColor = COLOR_SELECT;
         }
             break;
-        case SearchTuneValue_Filter:
+        case SearchTab_Filter:
         {
-            MF_BLOCK_CALL_2_P(self.searchTuneBarBlock, SearchTuneValue_Filter, NO);
+            MF_BLOCK_CALL_2_P(self.searchTabTappedBlock, SearchTab_Filter, NO);
         }
             break;
             

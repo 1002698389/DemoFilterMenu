@@ -9,6 +9,8 @@
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
 #import "FJTextButton.h"
+#import "FJTagModel.h"
+#import "NSArray+FJTagModel.h"
 #import <FJTool/FJTool.h>
 #import <BlocksKit/BlocksKit+UIKit.h>
 
@@ -16,28 +18,22 @@
 
 @interface FJTagCollectionView()
 
-@property (nonatomic, strong) NSMutableArray *innerTags;
 @property (nonatomic, strong) FJTagConfig *innerTagConfig;
+@property (nonatomic, strong) NSMutableArray<FJTagModel *> *innerTags;
+@property (nonatomic, strong) NSArray<FJTagModel *> *innerSelectedTags;
 @property (nonatomic, assign) CGFloat innerWidth;
-@property (nonatomic, strong) NSMutableArray *innerSelectedTags;
+
 
 @end
 
 
 @implementation FJTagCollectionView
 
-- (NSMutableArray *)innerTags {
+- (NSMutableArray<FJTagModel *> *)innerTags {
     if (_innerTags == nil) {
-        _innerTags = [[NSMutableArray alloc] init];
+        _innerTags = (NSMutableArray<FJTagModel *> *)[[NSMutableArray alloc] init];
     }
     return _innerTags;
-}
-
-- (NSMutableArray *)innerSelectedTags {
-    if (_innerSelectedTags == nil) {
-        _innerSelectedTags = [[NSMutableArray alloc] init];
-    }
-    return _innerSelectedTags;
 }
 
 - (instancetype)init
@@ -50,34 +46,23 @@
 }
 
 // 添加Tags
-- (void)addTags:(NSArray<NSString *> *)tags {
+- (void)addTags:(NSArray<FJTagModel *> *)tags {
     [self addTags:tags config:nil];
 }
 
 // 添加Tags(Config)
-- (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config {
-    if (tags == nil || [tags count] == 0) {
-        return;
-    }
-    
-    [self.innerTags addObjectsFromArray:tags];
-    if (config != nil) {
-        self.innerTagConfig = config;
-    }
+- (void)addTags:(NSArray<FJTagModel *> *)tags config:(FJTagConfig*)config {
+    [self addTags:tags config:config selectedTags:nil];
 }
 
 // 添加Tags(Config, SelectedTags)
-- (void)addTags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config selectedTags:(NSArray<NSString *> *)selectedTags {
+- (void)addTags:(NSArray<FJTagModel *> *)tags config:(FJTagConfig*)config selectedTags:(NSArray<FJTagModel *> *)selectedTags {
     if (tags == nil || [tags count] == 0) {
         return;
     }
     
     [self.innerTags addObjectsFromArray:tags];
-    if (selectedTags != nil && [selectedTags count] > 0) {
-        [self.innerSelectedTags addObjectsFromArray:selectedTags];
-    }else{
-        [self.innerSelectedTags removeAllObjects];
-    }
+    self.innerSelectedTags = selectedTags;
     if (config != nil) {
         self.innerTagConfig = config;
     }
@@ -85,12 +70,12 @@
 
 // 插入Tags
 // 插入Tags
-- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index {
+- (void)insertTag:(FJTagModel *)tag atIndex:(NSUInteger)index {
     [self insertTag:tag atIndex:index config:nil];
 }
 
 // 插入Tags(Config)
-- (void)insertTag:(NSString *)tag atIndex:(NSUInteger)index config:(FJTagConfig*)config {
+- (void)insertTag:(FJTagModel *)tag atIndex:(NSUInteger)index config:(FJTagConfig*)config {
     [_innerTags insertObject:tag atIndex:index];
     if (config != nil) {
         self.innerTagConfig = config;
@@ -98,7 +83,7 @@
 }
 
 // 删除Tags(名称)
-- (void)removeTag:(NSString*)tag {
+- (void)removeTag:(FJTagModel *)tag {
     [_innerTags removeObject:tag];
 }
 
@@ -134,7 +119,7 @@
 }
 
 // 获取所有Tags
-- (NSArray<NSString *> *)allTags {
+- (NSArray<FJTagModel *> *)allTags {
     return _innerTags;
 }
 
@@ -157,7 +142,7 @@
     CGFloat endX = self.innerWidth - _innerTagConfig.paddingRight;
     CGFloat eachX = orgX;
     CGFloat eachY = orgY;
-    for (NSString *tag in self.innerTags) {
+    for (FJTagModel *tag in self.innerTags) {
 
         FJTextButton *btn = [self tagButton:tag];
         if (btn.width + eachX > endX) {
@@ -186,16 +171,17 @@
     }
 }
 
-- (FJTextButton*)tagButton:(NSString*)tag {
+- (FJTextButton*)tagButton:(FJTagModel *)tagModel {
     
     FJTextButton *button = [[FJTextButton alloc] initWithFrame:CGRectMake(0, 0, _innerTagConfig.itemMinWidth, _innerTagConfig.itemMinHeight)];
-    if (self.innerSelectedTags == nil || [self.innerSelectedTags count] == 0 || ![self.innerSelectedTags containsObject:tag]) {
-        [button setTitle:tag config:_innerTagConfig selected:NO];
+    button.tagModel = tagModel;
+    if (self.innerSelectedTags == nil || [self.innerSelectedTags count] == 0 || ![self.innerSelectedTags containsTagModel:tagModel]) {
+        [button setTitle:[tagModel tag] config:_innerTagConfig selected:NO];
     }else{
-        [button setTitle:tag config:_innerTagConfig selected:YES];
+        [button setTitle:[tagModel tag] config:_innerTagConfig selected:YES];
     }
 
-    CGFloat textWidth = [tag singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
+    CGFloat textWidth = [[tagModel tag] singleWidthWithLabelFont:_innerTagConfig.tagTextFont enableCeil:YES];
     CGFloat buttonWidth = textWidth + _innerTagConfig.itemPaddingLeft + _innerTagConfig.itemPaddingRight;
     if (buttonWidth >= self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight) {
         button.width = self.innerWidth - _innerTagConfig.paddingLeft - _innerTagConfig.paddingRight;
@@ -210,11 +196,11 @@
 //    }
     
     MF_WEAK_SELF(self);
-    [button bk_addEventHandler:^(UIButton *sender) {
+    [button bk_addEventHandler:^(FJTextButton *sender) {
         if (_innerTagConfig.enableMultiTap) {
-            weakSelf.tagMultiTappedBlock == nil ? : weakSelf.tagMultiTappedBlock(sender.titleLabel.text, [(FJTextButton*)sender selected]);
+            weakSelf.tagMultiTappedBlock == nil ? : weakSelf.tagMultiTappedBlock(sender.tagModel, [(FJTextButton*)sender selected]);
         }else{
-            weakSelf.tagTappedBlock == nil ? : weakSelf.tagTappedBlock(sender.titleLabel.text);
+            weakSelf.tagTappedBlock == nil ? : weakSelf.tagTappedBlock(sender.tagModel);
         }
         
     } forControlEvents:UIControlEventTouchUpInside];
@@ -222,16 +208,16 @@
 }
 
 // 计算控件高度
-+ (CGSize)calculateSize:(CGFloat)width tags:(NSArray<NSString *> *)tags config:(FJTagConfig*)config {
++ (CGSize)calculateSize:(CGFloat)width tags:(NSArray<FJTagModel *> *)tags config:(FJTagConfig*)config {
     
     CGFloat orgX = config.paddingLeft;
     CGFloat orgY = config.paddingTop;
     CGFloat endX = width - config.paddingRight;
     CGFloat eachX = orgX;
     CGFloat eachY = orgY;
-    for (NSString *tag in tags) {
+    for (FJTagModel *tag in tags) {
         
-        CGFloat textWidth = [tag singleWidthWithLabelFont:config.tagTextFont enableCeil:YES];
+        CGFloat textWidth = [[tag tag] singleWidthWithLabelFont:config.tagTextFont enableCeil:YES];
         CGFloat buttonWidth = textWidth + config.itemPaddingLeft + config.itemPaddingRight;
         if (buttonWidth >= width) {
             buttonWidth = width - config.paddingLeft - config.paddingRight - 1.0;

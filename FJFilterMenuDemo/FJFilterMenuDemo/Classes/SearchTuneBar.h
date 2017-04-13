@@ -7,20 +7,23 @@
 
 #define SearchTuneBarHeight 44.0
 
-typedef NS_ENUM(NSInteger, SearchTuneValue)
+typedef NS_ENUM(NSInteger, SearchTab)
 {
-    SearchTuneValue_Hot,          // 热门
-    SearchTuneValue_Discount,     // 折扣
-    SearchTuneValue_Price,        // 价格
-    SearchTuneValue_Filter,       // 筛选
+    SearchTab_Hot,          // 热门
+    SearchTab_Discount,     // 折扣
+    SearchTab_Price,        // 价格
+    SearchTab_Filter,       // 筛选
 };
 
 @interface SearchTuneBar : UIView
 
-@property (nonatomic, copy) void(^searchTuneBarBlock)(SearchTuneValue tuneValue, BOOL asc);
+// 选中后实时Search排序状态的Block
+@property (nonatomic, copy) void(^searchTabTappedBlock)(SearchTab tab, BOOL asc);
 
-@property (assign, nonatomic) BOOL hasFilter;
+// 高亮Search Tab
+- (void)setSearchTabHighlighted:(BOOL)searchTabHighlighted;
 
-- (void)selecteTab:(SearchTuneValue)value;
+// 点击某个Search Tab(有些是排序、有些是单击选项)
+- (void)selecetSearchTab:(SearchTab)tab;
 
 @end

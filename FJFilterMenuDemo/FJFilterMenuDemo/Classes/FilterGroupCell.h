@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FilterSelectModel.h"
+
 @class FJTagConfig;
 
 @interface FilterGroupCell : FJCell
@@ -19,11 +21,11 @@
 @property (nonatomic, weak) FJTagConfig *tagConfig;
 @property (nonatomic, copy) NSString *rootCategory;
 @property (nonatomic, copy) NSString *middleCategory;
-@property (nonatomic, strong) NSArray<NSString *> *lastCategories;
-@property (nonatomic, copy) NSArray<NSString *> *selectedCategories;
+@property (nonatomic, strong) NSArray<FilterSelectModel *> *lastCategories;
+@property (nonatomic, strong) NSArray<FilterSelectModel *> *selectedCategories;
 
 // output
-@property (nonatomic, copy) NSString *selectedCategory;
+@property (nonatomic, strong) FilterSelectModel *selectedCategory;
 @property (nonatomic, assign) BOOL selected;
 
 @end

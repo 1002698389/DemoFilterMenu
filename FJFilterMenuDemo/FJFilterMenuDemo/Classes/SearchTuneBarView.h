@@ -5,21 +5,24 @@
 
 #import <UIKit/UIKit.h>
 #import "SearchTuneBar.h"
-#import "CategoryFilterData.h"
+#import "FilterSelectModel.h"
 
-#define SearchTuneBarView_BM_H 44.0
+#define SearchTuneBarView_BM_H  (44.0)
 #define SearchTuneBarView_Min_H SearchTuneBarHeight
 #define SearchTuneBarView_Max_H (SearchTuneBarView_Min_H + SearchTuneBarView_BM_H)
 
 @interface SearchTuneBarView : UIView
 
-@property (strong, nonatomic) SearchTuneBar *tuneBar;
+// TuneBar控件
+@property (nonatomic, strong) SearchTuneBar *tuneBar;
 
-@property (copy, nonatomic) void (^tuneViewDeleteBlock)(CategoryFilterSelectModel *filter);
+// FilterTagButton删除Block
+@property (nonatomic, copy) void (^filterTagButtonDeleteBlock)(FilterSelectModel *filter);
 
-// 筛选数据
-@property (strong, nonatomic) NSMutableArray<CategoryFilterSelectModel *> *filters;
+// 设置筛选结果数据
+- (void)setFilters:(NSMutableArray<FilterSelectModel *> *)filters;
 
+// 滚动至最前端
 - (void)setScrollToTop:(BOOL)toTop;
 
 @end

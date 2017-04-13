@@ -6,6 +6,7 @@
 #import "MessageViewController.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
+#import "FJTagModel.h"
 
 @interface MessageViewController ()
 
@@ -51,7 +52,8 @@
     config.itemPaddingRight = 5.0;
     config.debug = YES;
     
-    [self.tagView addTags:@[@"全部男包",@"双肩包/背包",@"手提包",@"挎包",@"旅行包",@"钱包/卡包"] config:config];
+    
+    [self.tagView addTags:@[[FJTagModel tagName:@"双肩包/背包"],[FJTagModel tagName:@"手提包"],[FJTagModel tagName:@"挎包"],[FJTagModel tagName:@"旅行包"],[FJTagModel tagName:@"钱包/卡包"]] config:config];
     [self.tagView refresh];
 }
 
@@ -62,7 +64,7 @@
         [_tagView setTagViewOrigin:CGPointMake(0, 30)];
         [self.view addSubview:_tagView];
         [_tagView setTagViewWidth:UI_SCREEN_WIDTH];
-        _tagView.tagMultiTappedBlock = ^(NSString *tag, BOOL selected) {
+        _tagView.tagMultiTappedBlock = ^(__kindof FJTagModel *tag, BOOL selected) {
             NSLog(@"%@ %@", tag, selected?@"选中":@"未选中");
         };
     }

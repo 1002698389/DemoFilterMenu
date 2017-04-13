@@ -7,6 +7,8 @@
 #import "SearchHistoryCell.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
+#import "RecentSearchModel.h"
+#import "HotSearchModel.h"
 
 @interface SearchHistoryView()
 
@@ -89,8 +91,18 @@
 - (instancetype)init
 {
     self = [super init];
-    if (self) {        
-        [FJStorage save_nsobject:@[@"手表",@"阿迪达斯",@"Michael Koros",@"Swarovski",@"Armani Collezioni",@"Ashford",@"手表",@"阿迪达斯",@"Michael Koros",@"Swarovski",@"Armani Collezioni",@"Ashford"] key:@"HotSearch"];
+    if (self) {
+        
+        HotSearchModel *hotSearchModel = [[HotSearchModel alloc] init];
+        hotSearchModel.data = (NSMutableArray<FJTagModel> *)[[NSMutableArray alloc] init];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"阿迪达斯"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"Michael Koros"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"手表"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"Swarovski"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"Armani"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"自行车"]];
+        [hotSearchModel.data addObject:[FJTagModel tagName:@"Ashford"]];
+        [FJStorage save_jsonmodel:hotSearchModel key:@"HotSearch"];
     }
     return self;
 }
@@ -109,14 +121,14 @@
         [self.indicatorView startAnimating];
         
         // Recent Search History
-        NSArray *tags = [[FJStorage value_nsobject:@"RecentSearch"] allObjects];
+        RecentSearchModel *recentSearchModel = [FJStorage value_jsonmodel:@"RecentSearchModel" key:@"RecentSearch"];
         // Add Cell
         self.tableView.hidden = NO;
         SearchHistoryCellDataSource *sds = [[SearchHistoryCellDataSource alloc] init];
-        CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:tags config:[FJTagConfig new]];
+        CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:recentSearchModel.history config:[FJTagConfig new]];
         sds.cellHeight = size.height + 30.0;
         sds.title = @"最近搜索";
-        sds.tags = tags;
+        sds.tags = recentSearchModel.history;
         [self.tableView addDataSource:sds];
         [self.tableView refresh];
         
@@ -127,14 +139,14 @@
             weakSelf.indicatorView.hidden = YES;
             
             // Hot Search
-            NSArray *hotTags = [FJStorage value_nsobject:@"HotSearch"];
+            HotSearchModel *hotSearchModel = [FJStorage value_jsonmodel:@"HotSearchModel" key:@"HotSearch"];
             // Add Cell
             SearchHistoryCellDataSource *hds = [[SearchHistoryCellDataSource alloc] init];
-            CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:hotTags config:[FJTagConfig new]];
+            CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:hotSearchModel.data config:[FJTagConfig new]];
             hds.cellHeight = size.height + 30.0;
             hds.title = @"热门搜索";
             hds.disableDeletion = YES;
-            hds.tags = hotTags;
+            hds.tags = hotSearchModel.data;
             [self.tableView addDataSource:hds];
             [self.tableView refresh];
             
@@ -148,20 +160,18 @@
         [self.tableView refresh];
         
         // Recent Search History
-        NSArray *tags = [[FJStorage value_nsobject:@"RecentSearch"] allObjects];
+        RecentSearchModel *recentSearchModel = [FJStorage value_jsonmodel:@"RecentSearchModel" key:@"RecentSearch"];
         // Add Cell
         SearchHistoryCellDataSource *sds = [[SearchHistoryCellDataSource alloc] init];
-        CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:tags config:[FJTagConfig new]];
+        CGSize size = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH tags:recentSearchModel.history config:[FJTagConfig new]];
         sds.cellHeight = size.height + 30.0;
         sds.title = @"最近搜索";
-        sds.tags = tags;
+        sds.tags = recentSearchModel.history;
         [self.tableView addDataSource:sds];
         [self.tableView addDataSource:hds];
         [self.tableView refresh];
     }
 }
-
-
 
 /*
 // Only override drawRect: if you perform custom drawing.

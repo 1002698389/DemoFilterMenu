@@ -45,6 +45,7 @@
             BOOL needRefresh = [weakSelf updateSearchCriteria:textField.text query:weakSelf.query];
             if (needRefresh) {
                 [weakSelf.searchFilterView renderGroup:YES];
+                [weakSelf.searchFilterView renderTuning:YES inloading:NO];
                 [weakSelf searchProductFirstPage];
             }
             [textField resignFirstResponder];
@@ -66,13 +67,13 @@
             make.height.equalTo(@SearchTuneBarHeight);
         }];
         
-        _searchTuneView.tuneViewDeleteBlock = ^(CategoryFilterSelectModel *filterModel) {
-            NSLog(@"%@",filterModel);
+        _searchTuneView.filterTagButtonDeleteBlock = ^(FilterSelectModel *filter) {
+            NSLog(@"%@",filter);
         };
         
-        _searchTuneView.tuneBar.searchTuneBarBlock = ^(SearchTuneValue tuneValue, BOOL asc) {
-            switch (tuneValue) {
-                case SearchTuneValue_Hot:
+        _searchTuneView.tuneBar.searchTabTappedBlock = ^(SearchTab tab, BOOL asc) {
+            switch (tab) {
+                case SearchTab_Hot:
                 {
                     weakSelf.sortprice = nil;
                     weakSelf.sortdiscount = nil;
@@ -80,7 +81,7 @@
                     break;
                 }
                     
-                case SearchTuneValue_Price:
+                case SearchTab_Price:
                 {
                     weakSelf.sortprice = asc ? @"0" : @"1";
                     weakSelf.sortdiscount = nil;
@@ -88,7 +89,7 @@
                     break;
                 }
                     
-                case SearchTuneValue_Discount:
+                case SearchTab_Discount:
                 {
                     weakSelf.sortdiscount = asc ? @"0" : @"1";
                     weakSelf.sortprice = nil;
@@ -96,13 +97,14 @@
                     break;
                 }
                     
-                case SearchTuneValue_Filter:
+                case SearchTab_Filter:
                 {
                     [UIView animateWithDuration:0.24 animations:^{
                         [weakSelf searchFilterView].frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT);
                     } completion:^(BOOL finished) {
                         
                         [weakSelf.searchFilterView renderGroup:NO];
+                        [weakSelf.searchFilterView renderTuning:NO inloading:NO];
                     }];
                     break;
                 }
@@ -170,18 +172,46 @@
         [MF_Key_Window addSubview:_searchFilterView];
         
         __weak typeof(self) weakSelf = self;
-        _searchFilterView.filterSelectedTuning = ^(id data) {
-            NSLog(@"%@",data);
-            if (data == nil) {
-                [weakSelf.searchTuneView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.equalTo(@SearchTuneBarView_Min_H);
-                }];
-            }else{
+        _searchFilterView.filterSelectedTuning = ^(NSMutableArray<FilterSelectModel *> *catergory, NSMutableArray<FilterSelectModel *> *brand, NSMutableArray<FilterSelectModel *> *seller, FilterSelectModel *price) {
+            // TODO
+            NSMutableArray *temp = [[NSMutableArray alloc] init];
+            if ([catergory count] > 0) {
+                [temp addObjectsFromArray:catergory];
+            }
+            if ([brand count] > 0) {
+                [temp addObjectsFromArray:brand];
+            }
+            if ([seller count] > 0) {
+                [temp addObjectsFromArray:seller];
+            }
+            if (price) {
+                if (price.highestPrice == price.lowestPrice == 0) {
+                    
+                }else{
+                    [temp addObject:price];
+                }
+            }
+            
+            if ([temp count] > 0) {
                 [weakSelf.searchTuneView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.height.equalTo(@SearchTuneBarView_Max_H);
                 }];
-                weakSelf.searchTuneView.filters = data;
+                [weakSelf.searchTuneView setFilters:temp];
+            }else{
+                [weakSelf.searchTuneView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.equalTo(@SearchTuneBarView_Min_H);
+                }];
             }
+            
+            NSLog(@"catergory:\n%@",catergory);
+            // TODO
+            NSLog(@"brand:\n%@",brand);
+            
+            // TODO
+            NSLog(@"seller:\n%@",seller);
+            
+            // TODO
+            NSLog(@"price:\n%@",price);
         };
     }
     return _searchFilterView;
@@ -228,6 +258,7 @@
     [self.collectionView collectionView].mj_footer = footer;
 }
 
+// 更新搜索Key和Query条件
 - (BOOL)updateSearchCriteria:(NSString*)key query:(QueryModel*)query {
     
     if ([key isEqualToString:self.key]) {
@@ -244,7 +275,7 @@
     return self.needUpdateCategory;
 }
 
-
+// 搜索商品结果
 - (void)searchProductFirstPage {
     __weak typeof(self) weakSelf = self;
     [self searchProduct:0 rendered:^(NSUInteger page, NSUInteger allpage, BOOL success, NSString *errmsg) {

@@ -4,6 +4,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FJTagModel.h"
 
 typedef NS_ENUM(NSInteger, TagAction) {
     TagAction_Deletion,
@@ -18,7 +19,7 @@ typedef NS_ENUM(NSInteger, TagAction) {
 
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, assign) BOOL disableDeletion;
-@property (nonatomic, strong) NSArray<NSString *> *tags;
+@property (nonatomic, strong) NSArray<FJTagModel *> *tags;
 
 @property (nonatomic, assign) TagAction action;
 @property (nonatomic, copy)   NSString *tag;

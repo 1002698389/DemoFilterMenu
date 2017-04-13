@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "FJTagConfig.h"
+#import "FJTagModel.h"
 
 @interface FJTextButton : UIButton
 
-- (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config;
+@property (nonatomic, strong) FJTagModel *tagModel;
 
 - (void)setTitle:(NSString *)title config:(FJTagButtonConfig *)config selected:(BOOL)selected;
 

@@ -6,6 +6,7 @@
 #import "SearchHistoryCell.h"
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
+#import "FJTagModel.h"
 
 @interface SearchHistoryCell()
 
@@ -69,10 +70,10 @@
         [self addSubview:_tagView];
         [_tagView setTagViewWidth:UI_SCREEN_WIDTH];
         MF_WEAK_SELF(self);
-        _tagView.tagTappedBlock = ^(NSString *tag) {
+        _tagView.tagTappedBlock = ^(__kindof FJTagModel *tag) {
             SearchHistoryCellDataSource *ds = weakSelf.cellDataSource;
             ds.action = TagAction_Tapped;
-            ds.tag = tag;
+            ds.tag = [tag tag];
             weakSelf.delegate == nil ? : [weakSelf.delegate fjcell_actionRespond:ds from:weakSelf];
         };
     }
