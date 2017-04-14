@@ -4,8 +4,6 @@
 //
 
 #import "SearchBaseViewController.h"
-#import <TTGTagCollectionView/TTGTextTagCollectionView.h>
-
 #import "FJTagCollectionView.h"
 #import "FJTagConfig.h"
 #import "SearchNavBarButton.h"

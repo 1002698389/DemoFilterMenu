@@ -10,13 +10,13 @@ pod 'FJTool', :git => 'https://github.com/jeffnjut/FJTool.git'
 pod 'FJRefresh', :git => 'https://github.com/jeffnjut/FJRefresh.git'
 pod 'ReactiveCocoa', '~> 2.3.1'
 pod 'BlocksKit'
-pod 'Typeset'
-pod 'JHChainableAnimations'
 pod 'Masonry'
-pod 'UIView+Shake'
-pod 'UIView+AnimationExtensions'
 pod 'JSONModel'
 
-pod 'TTGTagCollectionView'
+# pod 'JHChainableAnimations'
+# pod 'TTGTagCollectionView'
+# pod 'Typeset'
+# pod 'UIView+Shake'
+# pod 'UIView+AnimationExtensions'
 
 end
