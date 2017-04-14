@@ -18,4 +18,7 @@
 // 更新是否有勾选项目
 - (void)updateSelected:(BOOL)selected;
 
+// 重置勾选项目
+- (void)reset;
+
 @end

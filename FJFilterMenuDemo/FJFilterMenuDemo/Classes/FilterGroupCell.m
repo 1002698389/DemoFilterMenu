@@ -37,6 +37,27 @@
     [self.tagView removeAllTags];
     [self.tagView addTags:ds.lastCategories config:ds.tagConfig selectedTags:ds.selectedCategories];
     [self.tagView refresh];
+    if (ds.extended) {
+        self.tagView.hidden = NO;
+    }else{
+        self.tagView.hidden = YES;
+    }
+}
+
+- (void)extend {
+    
+    self.tagView.hidden = NO;
+    self.tagView.alpha = 0.0;
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:0.8 animations:^{
+        weakSelf.tagView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        weakSelf.tagView.alpha = 1.0;
+    }];
+}
+
+- (void)collapse {
+    self.tagView.hidden = YES;
 }
 
 - (FJTagCollectionView *)tagView {

@@ -132,7 +132,8 @@
     
     [resetBtn bk_addEventHandler:^(id sender) {
         [weakSelf renderGroup:YES];
-        [weakSelf renderTuning:YES inloading:YES];
+        [weakSelf renderTuning:YES inloading:NO];
+        [weakSelf.searchFilterCategoryView reset];
         
     } forControlEvents:UIControlEventTouchUpInside];
     
@@ -278,9 +279,21 @@
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         [weakSelf.indicatorView stopAnimating];
                         weakSelf.indicatorView.hidden = YES;
+                        [weakSelf renderTuning:YES inloading:NO];
                     });
                 }else if ([cellData isKindOfClass:[FilterGroupHeaderViewDataSource class]]) {
+
+                    for (FJMultiDataSource *mds in [weakSelf.groupView dataSource]) {
+                        if ([mds.headerViewDataSource isEqual:cellData]) {
+                            FilterGroupCellDataSource *ds = [mds.cellDataSources objectAtIndex:0];
+                            [weakSelf.groupView autoExtendAndCollapse:ds];
+                            FilterGroupCell *cell = [weakSelf.groupView cellForDataSource:ds];
+                            [cell autoExtendAndCollapse];
+                            break;
+                        }
+                    }
                     
+                    NSLog(@"Header Tapped");
                 }
             }
         }];
@@ -429,7 +442,9 @@
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = [FilterSelectModel fake:@[@"AAAAA",@"BBBB",@"CCCC",@"DDDD"] type:FilterType_Category];
     fds.selectedCategories = self.selectedCategories;
-    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeightExtended = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeight = 1.0;
+    fds.extended = YES;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
     
@@ -444,7 +459,8 @@
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = [FilterSelectModel fake:@[@"上衣",@"外套",@"裤子",@"帽子",@"鞋子",@"好看的眼镜",@"披风",@"棉袄",@"大棉袄",@"外衣",@"视频",@"新闻",@"全球",@"孙武",@"孙文",@"HelloKitty",@"药物",@"琼瑶",@"好一些",@"没有了"] type:FilterType_Category];
     fds.selectedCategories = self.selectedCategories;
-    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeightExtended = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeight = 1.0;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
     
@@ -459,7 +475,8 @@
     fds.tagConfig = [self tagConfig];
     fds.lastCategories = [FilterSelectModel fake:@[@"EEEEEE",@"FF",@"FF",@"GGGGGGGGGGGGGGGGGGGGGGGGGGGGG",@"KKKK"] type:FilterType_Category];
     fds.selectedCategories = self.selectedCategories;
-    fds.cellHeight = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeightExtended = [FJTagCollectionView calculateSize:UI_SCREEN_WIDTH - 100.0 tags:fds.lastCategories config:[self tagConfig]].height;
+    fds.cellHeight = 1.0;
     [mds.cellDataSources addObject:fds];
     [self.groupView addDataSource:mds];
     

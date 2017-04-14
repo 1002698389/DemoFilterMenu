@@ -94,6 +94,15 @@
     }
 }
 
+// 重置勾选项目
+- (void)reset {
+    for (UIButton *b in [self subviews]) {
+        if ([b isKindOfClass:[UIButton class]]) {
+            [b setImage:nil forState:UIControlStateNormal];
+        }
+    }
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

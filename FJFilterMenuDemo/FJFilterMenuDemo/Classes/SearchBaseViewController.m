@@ -25,7 +25,7 @@
 @property (nonatomic, strong) SearchNavBarButton *searchNavBarButton;
 @property (nonatomic, strong) SearchHistoryView *searchHistoryView;
 @property (nonatomic, strong) SearchAutomatedView *searchAutomatedView;
-@property (nonatomic, assign) BOOL searchHistory;
+@property (nonatomic, assign) BOOL inSearchingDashboard;
 
 
 @end
@@ -98,11 +98,16 @@
     [self.searchNavBarButton.cancelBtn bk_addEventHandler:^(id sender) {
         
         [weakSearchNavBarButton switchTo:0];
-        weakSelf.searchHistory = NO;
+        weakSelf.inSearchingDashboard = NO;
         
         [weakTf resignFirstResponder];
         [weakSelf restoreSearchBarAnimation];
-        weakSelf.searchHistoryView.hidden = YES;
+        _searchHistoryView.hidden = YES;
+        _searchAutomatedView.hidden = YES;
+        [_searchAutomatedView removeFromSuperview];
+        _searchAutomatedView = nil;
+        [_searchHistoryView removeFromSuperview];
+        _searchHistoryView = nil;
         weakTf.text = nil;
         
     } forControlEvents:UIControlEventTouchUpInside];
@@ -115,7 +120,7 @@
     } forControlEvents:UIControlEventTouchUpInside];
     
     tf.bk_didBeginEditingBlock = ^(UITextField *textField) {
-        if (weakSelf.searchHistory) {
+        if (weakSelf.inSearchingDashboard) {
             return;
         }
         
@@ -124,7 +129,7 @@
         [weakSelf.searchHistoryView refresh:YES];
 
         [weakSearchNavBarButton switchTo:1];
-        weakSelf.searchHistory = YES;
+        weakSelf.inSearchingDashboard = YES;
     };
     
     tf.bk_shouldReturnBlock = ^BOOL(UITextField *textfield) {
@@ -136,11 +141,17 @@
     
     [[tf.rac_textSignal throttle:0.5] subscribeNext:^(NSString *txt) {
         if ([txt trimString:TrimType_WhiteSpaneAndNewline].length > 0) {
-            weakSelf.searchAutomatedView.hidden = NO;
-            [weakSelf.searchAutomatedView refresh:txt];
+            // 有搜索字
+            if (weakSelf.inSearchingDashboard) {
+                weakSelf.searchAutomatedView.hidden = NO;
+                [_searchAutomatedView refresh:txt];
+            }
         }else{
-            weakSelf.searchAutomatedView.hidden = YES;
-            _searchHistoryView.hidden = NO;
+            // 无搜索字
+            if (weakSelf.inSearchingDashboard) {
+                _searchHistoryView.hidden = NO;
+                _searchAutomatedView.hidden = YES;
+            }
         }
     }];
 }
@@ -281,7 +292,7 @@
     [self.navigationController pushViewController:searchResultVC animated:YES];
     
     [self.searchNavBarButton switchTo:0];
-    self.searchHistory = NO;
+    self.inSearchingDashboard = NO;
     
 }
 
