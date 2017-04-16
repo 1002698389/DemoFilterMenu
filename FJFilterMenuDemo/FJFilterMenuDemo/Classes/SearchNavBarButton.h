@@ -11,6 +11,6 @@
 @property (nonatomic, strong) UIButton *messageBtn;
 
 - (void)setupUI;
-- (void)switchTo:(NSUInteger)index;
+- (void)switchTo:(NSUInteger)index completion:(void(^)(void))completion;
 
 @end

@@ -24,7 +24,7 @@
 @property (nonatomic, strong) SearchHistoryView *searchHistoryView;
 @property (nonatomic, strong) SearchAutomatedView *searchAutomatedView;
 @property (nonatomic, assign) BOOL inSearchingDashboard;
-
+@property (nonatomic, assign) BOOL animation;
 
 @end
 
@@ -95,22 +95,42 @@
     __weak typeof(self.searchNavBarButton) weakSearchNavBarButton = self.searchNavBarButton;
     [self.searchNavBarButton.cancelBtn bk_addEventHandler:^(id sender) {
         
-        [weakSearchNavBarButton switchTo:0];
-        weakSelf.inSearchingDashboard = NO;
+        if (weakSelf.animation) {
+            return;
+        }
         
+        if (!weakSelf.inSearchingDashboard) {
+            return;
+        }
+        
+        weakSelf.animation = YES;
+        weakSelf.inSearchingDashboard = NO;
+        [weakSearchNavBarButton switchTo:0 completion:^{
+            weakSelf.animation = NO;
+        }];
         [weakTf resignFirstResponder];
         [weakSelf restoreSearchBarAnimation];
         _searchHistoryView.hidden = YES;
         _searchAutomatedView.hidden = YES;
-        [_searchAutomatedView removeFromSuperview];
-        _searchAutomatedView = nil;
-        [_searchHistoryView removeFromSuperview];
-        _searchHistoryView = nil;
         weakTf.text = nil;
         
     } forControlEvents:UIControlEventTouchUpInside];
     
     [self.searchNavBarButton.messageBtn bk_addEventHandler:^(id sender) {
+        
+        if (weakSelf.animation) {
+            return;
+        }
+        
+        if (weakSelf.inSearchingDashboard) {
+            return;
+        }
+        
+        weakSelf.animation = YES;
+        weakSelf.inSearchingDashboard = NO;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+            weakSelf.animation = NO;
+        });
         
         MessageViewController *messageVC = [[MessageViewController alloc] init];
         [weakSelf.navigationController pushViewController:messageVC animated:YES];
@@ -118,19 +138,32 @@
     } forControlEvents:UIControlEventTouchUpInside];
     
     tf.bk_didBeginEditingBlock = ^(UITextField *textField) {
+        
+        if (weakSelf.animation) {
+            return;
+        }
+        
         if (weakSelf.inSearchingDashboard) {
             return;
         }
+        
+        weakSelf.animation = YES;
+        weakSelf.inSearchingDashboard = YES;
         
         [weakSelf expandSearchBarAnimation];
         weakSelf.searchHistoryView.hidden = NO;
         [weakSelf.searchHistoryView refresh:YES];
 
-        [weakSearchNavBarButton switchTo:1];
-        weakSelf.inSearchingDashboard = YES;
+        [weakSearchNavBarButton switchTo:1 completion:^{
+            weakSelf.animation = NO;
+        }];
+        
     };
     
     tf.bk_shouldReturnBlock = ^BOOL(UITextField *textfield) {
+        
+        weakSelf.inSearchingDashboard = NO;
+        
         [textfield resignFirstResponder];
         [weakSelf searchTag:textfield.text save:YES];
         textfield.text = nil;
@@ -178,6 +211,9 @@
         
         // Search View Tag Tapped
         _searchHistoryView.tagTapped = ^(NSString *tag) {
+            
+            weakSelf.inSearchingDashboard = NO;
+            
             UITextField *tf = (UITextField *)weakSelf.navigationItem.titleView;
             [tf resignFirstResponder];
             tf.text = nil;
@@ -208,6 +244,9 @@
         
         // Search View Tag Tapped
         _searchAutomatedView.tagTapped = ^(NSString *tag) {
+            
+            weakSelf.inSearchingDashboard = NO;
+            
             UITextField *tf = (UITextField *)weakSelf.navigationItem.titleView;
             [tf resignFirstResponder];
             tf.text = nil;
@@ -289,8 +328,7 @@
     [searchResultVC updateSearchCriteria:tag query:nil];
     [self.navigationController pushViewController:searchResultVC animated:YES];
     
-    [self.searchNavBarButton switchTo:0];
-    self.inSearchingDashboard = NO;
+    [self.searchNavBarButton switchTo:0 completion:nil];
     
 }
 

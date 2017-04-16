@@ -72,7 +72,7 @@
     self.messageBtn.hidden = NO;
 }
 
-- (void)switchTo:(NSUInteger)index {
+- (void)switchTo:(NSUInteger)index completion:(void(^)(void))completion {
     
     if (self.index == index) {
         return;
@@ -107,11 +107,13 @@
     self.shownBtn = shownBtn;
     self.hiddenBtn = hiddenBtn;
     
-    [self animated];
+    [self animated:^{
+        completion == nil ? : completion();
+    }];
     
 }
 
-- (void)scaleDown {
+- (void)scaleDown:(void(^)(void))completion {
     
     static CGFloat scale = 1.0;
     self.hiddenBtn.hidden = NO;
@@ -123,34 +125,39 @@
             weakSelf.hiddenBtn.hidden = YES;
             weakSelf.shownBtn.transform = CGAffineTransformMakeScale(scale, scale);
             weakSelf.shownBtn.hidden = NO;
-            [weakSelf scaleUp];
+            [weakSelf scaleUp:^{
+                completion == nil ? : completion();
+            }];
             scale = 1.0;
         }else{
             self.hiddenBtn.transform = CGAffineTransformMakeScale(scale, scale);
             scale -= ScaleStep;
-            [weakSelf scaleDown];
+            [weakSelf scaleDown:completion];
         }
     });
     
 }
 
-- (void)scaleUp {
+- (void)scaleUp:(void(^)(void))completion {
     static CGFloat scale = 0.0;
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(AniamtionDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (scale >= 1.0) {
             scale = 0.0;
             weakSelf.animation = NO;
+            completion == nil ? : completion();
         }else{
             self.shownBtn.transform = CGAffineTransformMakeScale(scale, scale);
             scale += ScaleStep;
-            [weakSelf scaleUp];
+            [weakSelf scaleUp:completion];
         }
     });
 }
 
-- (void)animated {
-    [self scaleDown];
+- (void)animated:(void(^)(void))completion {
+    [self scaleDown:^{
+        completion == nil ? : completion();
+    }];
 }
 
 /*
