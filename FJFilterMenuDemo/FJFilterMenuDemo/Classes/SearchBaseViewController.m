@@ -137,14 +137,13 @@
         
     } forControlEvents:UIControlEventTouchUpInside];
     
-    tf.bk_didBeginEditingBlock = ^(UITextField *textField) {
-        
+    tf.bk_shouldBeginEditingBlock = ^BOOL(UITextField *textField) {
         if (weakSelf.animation) {
-            return;
+            return NO;
         }
         
         if (weakSelf.inSearchingDashboard) {
-            return;
+            return NO;
         }
         
         weakSelf.animation = YES;
@@ -153,11 +152,11 @@
         [weakSelf expandSearchBarAnimation];
         weakSelf.searchHistoryView.hidden = NO;
         [weakSelf.searchHistoryView refresh:YES];
-
+        
         [weakSearchNavBarButton switchTo:1 completion:^{
             weakSelf.animation = NO;
         }];
-        
+        return YES;
     };
     
     tf.bk_shouldReturnBlock = ^BOOL(UITextField *textfield) {
